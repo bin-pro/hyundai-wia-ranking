@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>랭킹 관리자 — HYUNDAI WIA Back Office</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, sans-serif;
+      background: #060d18;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    .header {
+      background: #0a1829;
+      border-bottom: 1px solid #1e2d45;
+      padding: 0 28px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .header-logo { height: 22px; filter: brightness(0) invert(1); opacity: 0.9; }
+    .header-logo-fallback { font-size: 13px; font-weight: 900; color: #fff; letter-spacing: 1.5px; }
+    .header-divider { width: 1px; height: 24px; background: #2a3d55; }
+    .header-title { font-size: 15px; font-weight: 700; color: #94a3b8; }
+    .header-badge { font-size: 10px; font-weight: 700; color: #f5c400; background: rgba(245,196,0,0.12); border: 1px solid rgba(245,196,0,0.25); border-radius: 6px; padding: 2px 8px; letter-spacing: 0.5px; }
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .btn-add {
+      background: #1468e0;
+      color: #fff; border: none;
+      border-radius: 10px;
+      font-size: 13px; font-weight: 700;
+      padding: 9px 18px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-add:hover { background: #1a78f0; }
+    .btn-add-icon { font-size: 16px; font-weight: 400; line-height: 1; }
+
+    /* ── Main layout ─────────────────────────────── */
+    .main { padding: 24px 28px; max-width: 1400px; margin: 0 auto; }
+
+    /* ── Filter bar ──────────────────────────────── */
+    .filter-bar {
+      background: #111827;
+      border: 1px solid #1e2d45;
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .filter-label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.8px; min-width: 42px; }
+    .filter-btn {
+      background: #1a2535;
+      border: 1px solid #2a3d55;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { background: #22334a; color: #e2e8f0; }
+    .filter-btn.active { background: rgba(245,196,0,0.12); border-color: rgba(245,196,0,0.4); color: #f5c400; }
+
+    /* ── Stats cards ─────────────────────────────── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stat-card {
+      background: #111827;
+      border: 1px solid #1e2d45;
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .stat-label { font-size: 11px; font-weight: 600; color: #475569; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .stat-value { font-size: 32px; font-weight: 800; color: #f1f5f9; line-height: 1; }
+    .stat-sub { font-size: 11px; color: #475569; margin-top: 4px; }
+    .stat-card.typing .stat-value { color: #3b82f6; }
+    .stat-card.control .stat-value { color: #8b5cf6; }
+    .stat-card.jump .stat-value { color: #10b981; }
+
+    /* ── Table ───────────────────────────────────── */
+    .table-wrap {
+      background: #111827;
+      border: 1px solid #1e2d45;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .table-header-bar {
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid #1e2d45;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .table-title { font-size: 14px; font-weight: 700; color: #f1f5f9; }
+    .table-count { font-size: 12px; color: #475569; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      background: #0d1a2a;
+      padding: 11px 16px;
+      font-size: 11px; font-weight: 700;
+      color: #475569; text-align: left;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      border-bottom: 1px solid #1e2d45;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #1a2535; transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody td { padding: 13px 16px; font-size: 13px; color: #cbd5e1; vertical-align: middle; }
+    .rank-badge {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+      background: #1a2535; color: #64748b;
+    }
+    .rank-badge.top1 { background: rgba(245,196,0,0.15); color: #f5c400; }
+    .rank-badge.top2 { background: rgba(203,213,225,0.1); color: #94a3b8; }
+    .rank-badge.top3 { background: rgba(180,100,40,0.15); color: #c97a3a; }
+    .score-val { font-size: 15px; font-weight: 800; color: #f1f5f9; }
+    .score-unit { font-size: 10px; font-weight: 600; color: #475569; margin-left: 2px; }
+    .name-cell { font-weight: 600; color: #e2e8f0; }
+    .contact-cell { font-size: 12px; color: #64748b; }
+    .chip {
+      display: inline-flex; align-items: center;
+      border-radius: 20px;
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px;
+      white-space: nowrap;
+    }
+    .time-cell { font-size: 11px; color: #475569; }
+    .action-cell { display: flex; gap: 6px; }
+    .btn-edit, .btn-del {
+      padding: 5px 12px; border-radius: 7px;
+      font-size: 11px; font-weight: 700; cursor: pointer; border: none;
+      transition: all 0.15s;
+    }
+    .btn-edit { background: rgba(20,104,224,0.12); color: #3b82f6; border: 1px solid rgba(59,130,246,0.25); }
+    .btn-edit:hover { background: rgba(20,104,224,0.22); }
+    .btn-del  { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+    .btn-del:hover  { background: rgba(239,68,68,0.2); }
+
+    /* ── Modal ───────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 200;
+      padding: 20px;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #111827;
+      border: 1px solid #2a3d55;
+      border-radius: 18px;
+      width: 100%; max-width: 480px;
+      padding: 28px;
+      transform: scale(0.94) translateY(10px);
+      transition: transform 0.2s;
+    }
+    .modal-overlay.show .modal { transform: scale(1) translateY(0); }
+    .modal-title { font-size: 18px; font-weight: 800; color: #f1f5f9; margin-bottom: 22px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 6px; display: block; }
+    .form-input, .form-select {
+      width: 100%;
+      background: #0d1a2a;
+      border: 1px solid #2a3d55;
+      border-radius: 10px;
+      color: #e2e8f0;
+      font-size: 14px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.15s;
+      -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus { border-color: #1468e0; box-shadow: 0 0 0 3px rgba(20,104,224,0.12); }
+    .form-input::placeholder { color: #334155; }
+    .form-select option { background: #111827; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
+    .btn-cancel {
+      background: #1a2535; border: 1px solid #2a3d55;
+      color: #94a3b8; border-radius: 10px;
+      font-size: 13px; font-weight: 700;
+      padding: 10px 20px; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-cancel:hover { background: #22334a; }
+    .btn-save {
+      background: #1468e0; border: none;
+      color: #fff; border-radius: 10px;
+      font-size: 13px; font-weight: 700;
+      padding: 10px 24px; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-save:hover { background: #1a78f0; }
+
+    /* ── Confirm dialog ──────────────────────────── */
+    .confirm-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 300;
+      padding: 20px;
+    }
+    .confirm-overlay.show { opacity: 1; pointer-events: all; }
+    .confirm-box {
+      background: #111827;
+      border: 1px solid #2a3d55;
+      border-radius: 16px;
+      width: 100%; max-width: 360px;
+      padding: 28px 24px;
+      text-align: center;
+      transform: scale(0.92);
+      transition: transform 0.2s;
+    }
+    .confirm-overlay.show .confirm-box { transform: scale(1); }
+    .confirm-icon { font-size: 40px; margin-bottom: 12px; }
+    .confirm-title { font-size: 17px; font-weight: 800; color: #f1f5f9; margin-bottom: 6px; }
+    .confirm-sub { font-size: 13px; color: #64748b; margin-bottom: 22px; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+    .btn-confirm-cancel {
+      background: #1a2535; border: 1px solid #2a3d55;
+      color: #94a3b8; border-radius: 10px;
+      font-size: 13px; font-weight: 700;
+      padding: 10px 22px; cursor: pointer;
+    }
+    .btn-confirm-del {
+      background: #ef4444; border: none;
+      color: #fff; border-radius: 10px;
+      font-size: 13px; font-weight: 700;
+      padding: 10px 22px; cursor: pointer;
+    }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: repeat(2,1fr); }
+      .main { padding: 16px; }
+      thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
+    }
+    @media (max-width: 600px) {
+      .stats-row { grid-template-columns: repeat(2,1fr); }
+      thead th:nth-child(7), tbody td:nth-child(7) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <img class="header-logo" src="https://www.hyundai-wia.com/img/common/logo.png" alt="HYUNDAI WIA"
+         onerror="this.style.display='none';document.getElementById('logoFallback').style.display='block'" />
+    <span class="header-logo-fallback" id="logoFallback" style="display:none">HYUNDAI WIA</span>
+    <div class="header-divider"></div>
+    <span class="header-title">랭킹 관리자</span>
+    <span class="header-badge">BACK OFFICE</span>
+  </div>
+  <div class="header-right">
+    <button class="btn-add" onclick="openAddModal()">
+      <span class="btn-add-icon">+</span> 항목 추가
+    </button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <div class="filter-row">
+      <span class="filter-label">게임</span>
+      <button class="filter-btn active" data-gfilter="all">전체</button>
+      <button class="filter-btn" data-gfilter="typing">⌨️ 타이핑</button>
+      <button class="filter-btn" data-gfilter="control">🕹️ 컨트롤</button>
+      <button class="filter-btn" data-gfilter="jump">🦘 점프업</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">소속</span>
+      <button class="filter-btn active" data-sfilter="all">전체</button>
+      <button class="filter-btn" data-sfilter="의왕">의왕</button>
+      <button class="filter-btn" data-sfilter="평택">평택</button>
+      <button class="filter-btn" data-sfilter="서산">서산</button>
+      <button class="filter-btn" data-sfilter="창원1공장">창원1</button>
+      <button class="filter-btn" data-sfilter="창원2공장">창원2</button>
+      <button class="filter-btn" data-sfilter="창원3공장">창원3</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">전체 참가자</div>
+      <div class="stat-value" id="statAll">0</div>
+      <div class="stat-sub">총 등록 수</div>
+    </div>
+    <div class="stat-card typing">
+      <div class="stat-label">⌨️ 타이핑</div>
+      <div class="stat-value" id="statTyping">0</div>
+      <div class="stat-sub">참가자</div>
+    </div>
+    <div class="stat-card control">
+      <div class="stat-label">🕹️ 컨트롤</div>
+      <div class="stat-value" id="statControl">0</div>
+      <div class="stat-sub">참가자</div>
+    </div>
+    <div class="stat-card jump">
+      <div class="stat-label">🦘 점프업</div>
+      <div class="stat-value" id="statJump">0</div>
+      <div class="stat-sub">참가자</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-header-bar">
+      <span class="table-title">랭킹 목록</span>
+      <span class="table-count" id="tableCount">0건</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>순위</th>
+            <th>스코어</th>
+            <th>성함</th>
+            <th>연락처</th>
+            <th>소속</th>
+            <th>게임</th>
+            <th>등록시간</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">항목 추가</div>
+    <div class="form-group">
+      <label class="form-label">스코어</label>
+      <input type="number" class="form-input" id="mScore" placeholder="숫자 입력" min="0" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">성함</label>
+      <input type="text" class="form-input" id="mName" placeholder="홍길동" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">연락처</label>
+      <input type="text" class="form-input" id="mContact" placeholder="010-0000-0000" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">소속</label>
+      <select class="form-select" id="mSite">
+        <option value="">소속 선택</option>
+        <option value="의왕">의왕 연구소</option>
+        <option value="평택">평택 사업장</option>
+        <option value="서산">서산 사업장</option>
+        <option value="창원1공장">창원 1공장</option>
+        <option value="창원2공장">창원 2공장</option>
+        <option value="창원3공장">창원 3공장</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">게임</label>
+      <select class="form-select" id="mGame">
+        <option value="">게임 선택</option>
+        <option value="typing">⌨️ 타이핑 챌린지</option>
+        <option value="control">🕹️ 컨트롤 챌린지</option>
+        <option value="jump">🦘 점프업 챌린지</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-save" onclick="saveEntry()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title">삭제하시겠습니까?</div>
+    <div class="confirm-sub">이 작업은 되돌릴 수 없습니다.</div>
+    <div class="confirm-actions">
+      <button class="btn-confirm-cancel" onclick="closeConfirm()">취소</button>
+      <button class="btn-confirm-del" onclick="confirmDelete()">삭제</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── Data ──────────────────────────────────────── */
+  const SITE_COLORS = {
+    '의왕':     [59,130,246],
+    '평택':     [16,185,129],
+    '서산':     [245,158,11],
+    '창원1공장':[139,92,246],
+    '창원2공장':[239,68,68],
+    '창원3공장':[6,182,212],
+  };
+  const GAME_META = {
+    typing:  { label:'타이핑', icon:'⌨️', unit:'CPM',  color:'#3b82f6', bg:'rgba(59,130,246,0.1)' },
+    control: { label:'컨트롤', icon:'🕹️', unit:'초',   color:'#8b5cf6', bg:'rgba(139,92,246,0.1)' },
+    jump:    { label:'점프업', icon:'🦘', unit:'cm',   color:'#10b981', bg:'rgba(16,185,129,0.1)' },
+  };
+
+  let nextId = 1;
+  function makeEntry(score, name, contact, site, game, timeStr) {
+    return { id: nextId++, score, name, contact, site, game, time: timeStr };
+  }
+
+  let entries = [
+    makeEntry(312, '김민준', '010-1234-5678', '의왕',     'typing',  '2025-05-10 09:14'),
+    makeEntry(285, '이서연', '010-2345-6789', '창원1공장','typing',  '2025-05-10 09:22'),
+    makeEntry(38,  '박지훈', '010-3456-7890', '평택',     'control', '2025-05-10 09:35'),
+    makeEntry(72,  '최수아', '010-4567-8901', '서산',     'jump',    '2025-05-10 09:41'),
+    makeEntry(268, '정우진', '010-5678-9012', '창원2공장','typing',  '2025-05-10 10:02'),
+    makeEntry(44,  '한유나', '010-6789-0123', '창원3공장','control', '2025-05-10 10:18'),
+    makeEntry(88,  '오태양', '010-7890-1234', '의왕',     'jump',    '2025-05-10 10:30'),
+    makeEntry(29,  '임채원', '010-8901-2345', '평택',     'control', '2025-05-10 10:47'),
+    makeEntry(241, '신하은', '010-9012-3456', '서산',     'typing',  '2025-05-10 11:05'),
+    makeEntry(65,  '강도현', '010-0123-4567', '창원1공장','jump',    '2025-05-10 11:22'),
+  ];
+
+  /* ── Filter state ──────────────────────────────── */
+  let gFilter = 'all';
+  let sFilter = 'all';
+
+  document.querySelectorAll('[data-gfilter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-gfilter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      gFilter = btn.dataset.gfilter;
+      render();
+    });
+  });
+  document.querySelectorAll('[data-sfilter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-sfilter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      sFilter = btn.dataset.sfilter;
+      render();
+    });
+  });
+
+  /* ── Render ────────────────────────────────────── */
+  function getFiltered() {
+    return entries.filter(e => {
+      if (gFilter !== 'all' && e.game !== gFilter) return false;
+      if (sFilter !== 'all' && e.site !== sFilter) return false;
+      return true;
+    }).sort((a, b) => b.score - a.score);
+  }
+
+  function siteChip(site) {
+    const rgb = SITE_COLORS[site] || [100,116,139];
+    return `<span class="chip" style="background:rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.12);color:rgb(${rgb[0]},${rgb[1]},${rgb[2]});border:1px solid rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.3)">${site}</span>`;
+  }
+
+  function gameChip(game) {
+    const m = GAME_META[game];
+    if (!m) return '-';
+    return `<span class="chip" style="background:${m.bg};color:${m.color};border:1px solid ${m.color}33">${m.icon} ${m.label}</span>`;
+  }
+
+  function rankBadge(rank) {
+    let cls = 'rank-badge';
+    if (rank === 1) cls += ' top1';
+    else if (rank === 2) cls += ' top2';
+    else if (rank === 3) cls += ' top3';
+    return `<span class="${cls}">${rank}</span>`;
+  }
+
+  function render() {
+    const filtered = getFiltered();
+    const tbody = document.getElementById('tableBody');
+
+    /* Stats */
+    document.getElementById('statAll').textContent     = entries.length;
+    document.getElementById('statTyping').textContent  = entries.filter(e => e.game === 'typing').length;
+    document.getElementById('statControl').textContent = entries.filter(e => e.game === 'control').length;
+    document.getElementById('statJump').textContent    = entries.filter(e => e.game === 'jump').length;
+    document.getElementById('tableCount').textContent  = filtered.length + '건';
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:#334155">데이터가 없습니다</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map((e, i) => {
+      const rank = i + 1;
+      const unit = GAME_META[e.game]?.unit || '';
+      return `<tr>
+        <td>${rankBadge(rank)}</td>
+        <td><span class="score-val">${e.score.toLocaleString()}</span><span class="score-unit">${unit}</span></td>
+        <td class="name-cell">${e.name}</td>
+        <td class="contact-cell">${e.contact || '-'}</td>
+        <td>${siteChip(e.site)}</td>
+        <td>${gameChip(e.game)}</td>
+        <td class="time-cell">${e.time}</td>
+        <td class="action-cell">
+          <button class="btn-edit" onclick="openEditModal(${e.id})">수정</button>
+          <button class="btn-del"  onclick="openConfirm(${e.id})">삭제</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ── Modal ─────────────────────────────────────── */
+  let editingId = null;
+
+  function openAddModal() {
+    editingId = null;
+    document.getElementById('modalTitle').textContent = '항목 추가';
+    document.getElementById('mScore').value = '';
+    document.getElementById('mName').value = '';
+    document.getElementById('mContact').value = '';
+    document.getElementById('mSite').value = '';
+    document.getElementById('mGame').value = '';
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+
+  function openEditModal(id) {
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    editingId = id;
+    document.getElementById('modalTitle').textContent = '항목 수정';
+    document.getElementById('mScore').value = e.score;
+    document.getElementById('mName').value = e.name;
+    document.getElementById('mContact').value = e.contact;
+    document.getElementById('mSite').value = e.site;
+    document.getElementById('mGame').value = e.game;
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+
+  function saveEntry() {
+    const score   = Number(document.getElementById('mScore').value);
+    const name    = document.getElementById('mName').value.trim();
+    const contact = document.getElementById('mContact').value.trim();
+    const site    = document.getElementById('mSite').value;
+    const game    = document.getElementById('mGame').value;
+
+    if (!score || score <= 0) return alert('스코어를 입력해주세요.');
+    if (!name)    return alert('성함을 입력해주세요.');
+    if (!site)    return alert('소속을 선택해주세요.');
+    if (!game)    return alert('게임을 선택해주세요.');
+
+    const now = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const timeStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+    if (editingId === null) {
+      entries.push(makeEntry(score, name, contact, site, game, timeStr));
+    } else {
+      const e = entries.find(x => x.id === editingId);
+      if (e) { e.score = score; e.name = name; e.contact = contact; e.site = site; e.game = game; }
+    }
+    closeModal();
+    render();
+  }
+
+  /* Close modal on overlay click */
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  /* ── Confirm delete ────────────────────────────── */
+  let deletingId = null;
+
+  function openConfirm(id) {
+    deletingId = id;
+    document.getElementById('confirmOverlay').classList.add('show');
+  }
+  function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.remove('show');
+    deletingId = null;
+  }
+  function confirmDelete() {
+    if (deletingId === null) return;
+    entries = entries.filter(e => e.id !== deletingId);
+    closeConfirm();
+    render();
+  }
+
+  document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeConfirm();
+  });
+
+  /* ── Init ──────────────────────────────────────── */
+  render();
+</script>
+</body>
+</html>

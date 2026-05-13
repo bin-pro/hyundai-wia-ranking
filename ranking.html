@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, initial-scale=1.0" />
+  <title>3종 챌린지 랭킹보드</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background: linear-gradient(140deg, #9ecce8 0%, #bcdaf2 22%, #d2e9f8 48%, #e6f2fb 72%, #f4f9fd 100%);
+      min-height: 100vh;
+    }
+
+    /* ── Crystal BG ── */
+    .bg-crystal {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      pointer-events: none; z-index: 0;
+      mix-blend-mode: multiply;
+      opacity: 0.9;
+    }
+
+    /* ── 50th Emblem ── */
+    .emblem-50 {
+      position: fixed; top: -10px; right: 10px;
+      width: 200px;
+      pointer-events: none; z-index: 10;
+      mix-blend-mode: multiply;
+    }
+
+    /* ── Main Wrapper ── */
+    .wrapper {
+      position: relative; z-index: 1;
+      height: 100vh;
+      display: flex; flex-direction: column;
+      padding: 20px 36px 14px;
+    }
+
+    /* ── Page Header ── */
+    .page-header {
+      flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 14px;
+      padding-right: 200px;
+    }
+    .campaign-label {
+      font-size: 13px; font-weight: 700;
+      color: #2a5a88; letter-spacing: 2px;
+      margin-bottom: 2px;
+    }
+    .beyond-logo {
+      fill: #040000;
+      height: 100px; width: auto;
+      display: block;
+    }
+    .ranking-subtitle {
+      font-size: 15px; font-weight: 700;
+      color: #1a4a7a; letter-spacing: 4px;
+      margin-top: 4px;
+    }
+
+    /* ── Board ── */
+    .board {
+      flex: 1; min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+    }
+
+    .col {
+      background: rgba(255,255,255,0.75);
+      border-radius: 22px;
+      border: 2px solid rgba(255,255,255,0.92);
+      box-shadow: 0 8px 32px rgba(20,70,150,0.10);
+      backdrop-filter: blur(18px);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Column Header ── */
+    .col-hd {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 22px 14px;
+      border-bottom: 1.5px solid rgba(255,255,255,0.75);
+    }
+    .game-icon {
+      width: 54px; height: 54px; border-radius: 50%;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .game-icon img {
+      display: block; width: 798px; height: auto; flex-shrink: 0;
+    }
+    .icon-typing  img { margin-left: -145px; margin-top: -232px; }
+    .icon-control img { margin-left: -142px; margin-top: -311px; }
+    .icon-jump    img { margin-left: -145px; margin-top: -385px; }
+
+    .col-hd-info { flex: 1; min-width: 0; }
+    .game-name { font-size: 17px; font-weight: 900; }
+    .col-typing .game-name  { color: #1a6030; }
+    .col-control .game-name { color: #6a1890; }
+    .col-jump .game-name    { color: #904010; }
+
+    .game-sub { font-size: 11px; font-weight: 600; color: #6888aa; margin-top: 2px; }
+
+    .unit-badge {
+      font-size: 11px; font-weight: 800;
+      padding: 4px 13px; border-radius: 30px; flex-shrink: 0;
+    }
+    .col-typing .unit-badge  { background: rgba(40,160,80,0.10); color: #1a6a38; border: 1.5px solid rgba(40,160,80,0.28); }
+    .col-control .unit-badge { background: rgba(160,40,200,0.09); color: #7018a0; border: 1.5px solid rgba(160,40,200,0.24); }
+    .col-jump .unit-badge    { background: rgba(200,90,20,0.09); color: #8a3808; border: 1.5px solid rgba(200,90,20,0.24); }
+
+    /* ── Rank List ── */
+    .rank-list { flex: 1; padding: 8px 0; overflow: hidden; }
+
+    .rank-item {
+      display: flex; align-items: center; gap: 12px;
+      margin: 5px 12px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.82);
+      border-radius: 14px;
+      border: 1.5px solid rgba(255,255,255,0.95);
+      box-shadow: 0 2px 8px rgba(20,70,150,0.05);
+    }
+    .rank-item.r1 { background: rgba(255,255,255,0.96); box-shadow: 0 4px 18px rgba(20,70,150,0.10); }
+
+    .rank-badge {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 900; flex-shrink: 0;
+      background: rgba(170,205,235,0.35); color: #4a6a8a;
+    }
+    .r1 .rank-badge { background: linear-gradient(135deg, #f8d060, #e8a020); color: #fff; font-size: 16px; }
+    .r2 .rank-badge { background: linear-gradient(135deg, #d0d8e4, #a8b8c8); color: #fff; font-size: 16px; }
+    .r3 .rank-badge { background: linear-gradient(135deg, #d8a070, #c07040); color: #fff; font-size: 16px; }
+
+    .rank-info { flex: 1; min-width: 0; }
+    .rank-name {
+      font-size: 15px; font-weight: 800; color: #0b1f3a;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .r1 .rank-name { font-size: 17px; }
+
+    .site-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 700;
+      padding: 2px 8px 2px 5px; border-radius: 20px; margin-top: 2px;
+    }
+    .site-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+    .rank-score { text-align: right; flex-shrink: 0; }
+    .score-num { font-size: 20px; font-weight: 900; color: #0b1f3a; }
+    .r1 .score-num { font-size: 24px; }
+    .score-unit { font-size: 10px; color: #6888aa; margin-top: 1px; }
+
+    /* ── Footer ── */
+    footer {
+      flex-shrink: 0; padding-top: 10px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-logo { height: 40px; filter: brightness(0); }
+    .footer-right { display: flex; align-items: center; gap: 8px; }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #28c870; animation: blink 1.8s infinite; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    .live-label { font-size: 12px; font-weight: 800; color: #28c870; letter-spacing: 2px; }
+    .sites-label { font-size: 12px; font-weight: 600; color: #5a80a0; margin-left: 8px; }
+    .clock { font-size: 14px; font-weight: 800; color: #3a6a9a; letter-spacing: 2px; margin-left: 16px; }
+  </style>
+</head>
+<body>
+
+<!-- Crystal BG (horizontal layout) -->
+<img class="bg-crystal"
+     src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/파란 보석 그래픽들_가로형.png"
+     alt="" />
+
+<!-- 50th Anniversary Emblem -->
+<img class="emblem-50"
+     src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/빨간 50주년 엠블럼.png"
+     alt="" />
+
+<div class="wrapper">
+
+  <div class="page-header">
+    <div class="campaign-label">현대위아 창립 50주년 연간 캠페인</div>
+
+    <!-- BEYOND MOTION stacked logo (extracted from BEYOND MOTION 로고.svg, second group) -->
+    <svg class="beyond-logo" viewBox="722 508 362 338" xmlns="http://www.w3.org/2000/svg">
+      <!-- BEYOND -->
+      <path d="M727.62,664.86v-151.37h24.09c16.18,0,22.44,7.54,22.44,25.93v30.35c0,9.38-3.13,15.08-9.2,16.74,5.89,1.29,11.04,5.7,11.04,16.74v36.05c0,17.84-8.09,25.57-24.28,25.57h-24.09ZM761.1,539.24c0-8.64-2.57-11.59-9.38-11.59h-10.12v53.52h10.3c6.62,0,9.2-2.94,9.2-10.12v-31.82ZM761.65,605.64c0-8.64-1.84-12.14-9.75-12.14h-10.3v57.57h10.12c6.62,0,9.93-3.86,9.93-11.77v-33.66Z"/>
+      <path d="M787.4,664.86v-151.37h40.09v14.16h-26.12v53.15h18.39v13.98h-18.39v56.28h27.04v13.79h-41.01Z"/>
+      <path d="M855.26,664.86v-67.87l-21.34-83.5h14.71c4.78,19.86,12.32,51.5,14.35,62.35,2.02-10.85,9.56-42.3,14.9-62.35h13.61l-22.07,83.5v67.87h-14.16Z"/>
+      <path d="M895.91,537.59c0-17.1,7.91-25.75,23.73-25.75s23.91,8.64,23.91,25.75v103.18c0,17.1-7.91,25.75-23.91,25.75s-23.73-8.64-23.73-25.75v-103.18ZM929.56,537.59c0-7.72-3.31-11.59-9.93-11.59s-9.75,3.86-9.75,11.59v103.18c0,7.91,3.31,11.95,9.75,11.95s9.93-4.05,9.93-11.95v-103.18Z"/>
+      <path d="M993.75,664.86l-26.12-110.54c.18,22.99.18,44.14.18,67.13v43.41h-12.14v-151.37h16.74l23.17,110.91c-.18-20.78-.18-40.46-.18-61.25v-49.66h12.32v151.37h-13.98Z"/>
+      <path d="M1021.16,664.86v-151.37h23.54c16.18,0,23.91,9.75,23.91,25.93v99.69c0,17.1-7.91,25.75-23.91,25.75h-23.54ZM1054.63,539.61c0-7.54-3.31-11.95-9.93-11.95h-9.56v123.41h9.56c6.62,0,9.93-4.05,9.93-11.95v-99.5Z"/>
+      <!-- MOTION -->
+      <path d="M786.19,841.44v-47.44c0-23.05.19-44.77.38-67.82l-16.96,115.26h-12.76l-16.77-115.26c.19,23.05.38,44.77.38,67.82v47.44h-13.34v-156.8h19.43l16.58,122.5,16.57-122.5h20v156.8h-13.53Z"/>
+      <path d="M812.29,709.6c0-17.72,8.19-26.67,24.58-26.67s24.77,8.95,24.77,26.67v106.88c0,17.72-8.19,26.67-24.77,26.67s-24.58-8.95-24.58-26.67v-106.88ZM847.15,709.6c0-8-3.43-12-10.29-12s-10.1,4-10.1,12v106.88c0,8.19,3.43,12.38,10.1,12.38s10.29-4.19,10.29-12.38v-106.88Z"/>
+      <path d="M883.92,841.44v-142.13h-17.53v-14.67h49.34v14.67h-17.53v142.13h-14.29Z"/>
+      <path d="M925.26,841.44v-156.8h14.48v156.8h-14.48Z"/>
+      <path d="M953.27,709.6c0-17.72,8.19-26.67,24.58-26.67s24.77,8.95,24.77,26.67v106.88c0,17.72-8.19,26.67-24.77,26.67s-24.58-8.95-24.58-26.67v-106.88ZM988.13,709.6c0-8-3.43-12-10.29-12s-10.1,4-10.1,12v106.88c0,8.19,3.43,12.38,10.1,12.38s10.29-4.19,10.29-12.38v-106.88Z"/>
+      <path d="M1054.62,841.44l-27.05-114.5c.19,23.81.19,45.72.19,69.54v44.96h-12.57v-156.8h17.34l24.01,114.88c-.19-21.53-.19-41.91-.19-63.44v-51.44h12.76v156.8h-14.48Z"/>
+    </svg>
+
+    <div class="ranking-subtitle">3종 챌린지 랭킹보드</div>
+  </div>
+
+  <div class="board">
+
+    <!-- 타이핑 챌린지 -->
+    <div class="col col-typing">
+      <div class="col-hd">
+        <div class="game-icon icon-typing"><img src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/SVG/챌린지 아이콘 3종.svg" alt="타이핑" /></div>
+        <div class="col-hd-info">
+          <div class="game-name">타이핑 챌린지</div>
+          <div class="game-sub">손끝으로 완성되는 50년</div>
+        </div>
+        <span class="unit-badge">CPM</span>
+      </div>
+      <div class="rank-list" id="list-typing"></div>
+    </div>
+
+    <!-- 컨트롤 챌린지 -->
+    <div class="col col-control">
+      <div class="col-hd">
+        <div class="game-icon icon-control"><img src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/SVG/챌린지 아이콘 3종.svg" alt="컨트롤" /></div>
+        <div class="col-hd-info">
+          <div class="game-name">컨트롤 챌린지</div>
+          <div class="game-sub">흔들림 없이 나아간 50년</div>
+        </div>
+        <span class="unit-badge">초</span>
+      </div>
+      <div class="rank-list" id="list-control"></div>
+    </div>
+
+    <!-- 점프업 챌린지 -->
+    <div class="col col-jump">
+      <div class="col-hd">
+        <div class="game-icon icon-jump"><img src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/SVG/챌린지 아이콘 3종.svg" alt="점프업" /></div>
+        <div class="col-hd-info">
+          <div class="game-name">점프업 챌린지</div>
+          <div class="game-sub">도약을 향해 뛰는 50년</div>
+        </div>
+        <span class="unit-badge">cm</span>
+      </div>
+      <div class="rank-list" id="list-jump"></div>
+    </div>
+
+  </div>
+
+  <footer>
+    <img class="footer-logo"
+         src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/SVG/HYUNDAI WIA, 50 로고.svg"
+         alt="HYUNDAI WIA 50th" />
+    <div class="footer-right">
+      <div class="live-dot"></div>
+      <div class="live-label">LIVE</div>
+      <span class="sites-label">의왕 · 평택 · 서산 · 창원 1·2·3공장</span>
+      <div class="clock" id="clock"></div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const SITE_COLORS = {
+    '의왕': [59,130,246], '평택': [16,185,129], '서산': [245,158,11],
+    '창원1공장': [139,92,246], '창원2공장': [239,68,68], '창원3공장': [6,182,212],
+  };
+
+  function chip(site) {
+    const [r,g,b] = SITE_COLORS[site] || [120,150,180];
+    return `<span class="site-chip" style="background:rgba(${r},${g},${b},0.10);border:1px solid rgba(${r},${g},${b},0.30);color:rgb(${r},${g},${b})">
+              <span class="site-dot" style="background:rgb(${r},${g},${b})"></span>${site}
+            </span>`;
+  }
+
+  const MOCK = {
+    typing: [
+      {name:'홍길동', site:'창원2공장', score:369},
+      {name:'김민석', site:'창원1공장', score:360},
+      {name:'김건욱', site:'의왕',     score:326},
+      {name:'이준호', site:'서산',     score:318},
+      {name:'박수현', site:'평택',     score:305},
+      {name:'최영진', site:'창원3공장', score:298},
+      {name:'정민철', site:'의왕',     score:295},
+      {name:'강다은', site:'평택',     score:292},
+      {name:'김창식', site:'평택',     score:290},
+      {name:'김동현', site:'서산',     score:288},
+    ],
+    control: [
+      {name:'홍길동', site:'창원2공장', score:'7.34'},
+      {name:'김민석', site:'창원1공장', score:'8.12'},
+      {name:'김건욱', site:'의왕',     score:'8.55'},
+      {name:'이준호', site:'서산',     score:'9.01'},
+      {name:'박수현', site:'평택',     score:'9.44'},
+      {name:'최영진', site:'창원3공장', score:'10.22'},
+      {name:'정민철', site:'의왕',     score:'10.78'},
+      {name:'강다은', site:'평택',     score:'11.03'},
+      {name:'김창식', site:'평택',     score:'11.45'},
+      {name:'김동현', site:'서산',     score:'12.10'},
+    ],
+    jump: [
+      {name:'홍길동', site:'창원2공장', score:197},
+      {name:'김민석', site:'창원1공장', score:192},
+      {name:'김건욱', site:'의왕',     score:189},
+      {name:'이준호', site:'서산',     score:186},
+      {name:'박수현', site:'평택',     score:184},
+      {name:'최영진', site:'창원3공장', score:183},
+      {name:'정민철', site:'의왕',     score:182},
+      {name:'강다은', site:'평택',     score:180},
+      {name:'김창식', site:'평택',     score:179},
+      {name:'김동현', site:'서산',     score:178},
+    ],
+  };
+
+  const UNITS = {typing:'CPM', control:'초', jump:'cm'};
+  const RANK_LABELS = ['1', '2', '3'];
+
+  function render(id, list, unit) {
+    const el = document.getElementById(id);
+    el.innerHTML = list.map((d, i) => `
+      <div class="rank-item r${i+1}">
+        <div class="rank-badge">${i < 3 ? RANK_LABELS[i] : i+1}</div>
+        <div class="rank-info">
+          <div class="rank-name">${d.name}</div>
+          <div>${chip(d.site)}</div>
+        </div>
+        <div class="rank-score">
+          <div class="score-num">${d.score}</div>
+          <div class="score-unit">${unit}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function tick() {
+    const n = new Date(), z = v => String(v).padStart(2,'0');
+    document.getElementById('clock').textContent =
+      `${z(n.getHours())}:${z(n.getMinutes())}:${z(n.getSeconds())}`;
+  }
+
+  render('list-typing',  MOCK.typing,  UNITS.typing);
+  render('list-control', MOCK.control, UNITS.control);
+  render('list-jump',    MOCK.jump,    UNITS.jump);
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
