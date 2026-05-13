@@ -1,0 +1,11 @@
+{
+  "name": "hyundai-wia-ranking",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "express": "^4.18.2"
+  }
+}

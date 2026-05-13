@@ -419,23 +419,16 @@
     jump:    { label:'점프업', icon:'🦘', unit:'cm',   color:'#10b981', bg:'rgba(16,185,129,0.1)' },
   };
 
-  let nextId = 1;
-  function makeEntry(score, name, contact, site, game, timeStr) {
-    return { id: nextId++, score, name, contact, site, game, time: timeStr };
-  }
+  let entries = [];
 
-  let entries = [
-    makeEntry(312, '김민준', '010-1234-5678', '의왕',     'typing',  '2025-05-10 09:14'),
-    makeEntry(285, '이서연', '010-2345-6789', '창원1공장','typing',  '2025-05-10 09:22'),
-    makeEntry(38,  '박지훈', '010-3456-7890', '평택',     'control', '2025-05-10 09:35'),
-    makeEntry(72,  '최수아', '010-4567-8901', '서산',     'jump',    '2025-05-10 09:41'),
-    makeEntry(268, '정우진', '010-5678-9012', '창원2공장','typing',  '2025-05-10 10:02'),
-    makeEntry(44,  '한유나', '010-6789-0123', '창원3공장','control', '2025-05-10 10:18'),
-    makeEntry(88,  '오태양', '010-7890-1234', '의왕',     'jump',    '2025-05-10 10:30'),
-    makeEntry(29,  '임채원', '010-8901-2345', '평택',     'control', '2025-05-10 10:47'),
-    makeEntry(241, '신하은', '010-9012-3456', '서산',     'typing',  '2025-05-10 11:05'),
-    makeEntry(65,  '강도현', '010-0123-4567', '창원1공장','jump',    '2025-05-10 11:22'),
-  ];
+  async function loadEntries() {
+    const res = await fetch('/api/scores');
+    entries = (await res.json()).map(e => ({
+      id: e.id, score: e.score, name: e.name,
+      contact: e.phone, site: e.site, game: e.game, time: e.created_at
+    }));
+    render();
+  }
 
   /* ── Filter state ──────────────────────────────── */
   let gFilter = 'all';
@@ -569,13 +562,20 @@
     const timeStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
     if (editingId === null) {
-      entries.push(makeEntry(score, name, contact, site, game, timeStr));
+      await fetch('/api/scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ score, name, phone: contact, site, game })
+      });
     } else {
-      const e = entries.find(x => x.id === editingId);
-      if (e) { e.score = score; e.name = name; e.contact = contact; e.site = site; e.game = game; }
+      await fetch(`/api/scores/${editingId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ score, name, phone: contact, site, game })
+      });
     }
     closeModal();
-    render();
+    await loadEntries();
   }
 
   /* Close modal on overlay click */
@@ -594,11 +594,11 @@
     document.getElementById('confirmOverlay').classList.remove('show');
     deletingId = null;
   }
-  function confirmDelete() {
+  async function confirmDelete() {
     if (deletingId === null) return;
-    entries = entries.filter(e => e.id !== deletingId);
+    await fetch(`/api/scores/${deletingId}`, { method: 'DELETE' });
     closeConfirm();
-    render();
+    await loadEntries();
   }
 
   document.getElementById('confirmOverlay').addEventListener('click', function(e) {
@@ -606,7 +606,7 @@
   });
 
   /* ── Init ──────────────────────────────────────── */
-  render();
+  loadEntries();
 </script>
 </body>
 </html>

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>컨트롤 챌린지 — 등록</title>
+  <title>점프업 챌린지 — 등록</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; overflow: hidden; }
     body {
       font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-      background: linear-gradient(180deg, #b8c8ee 0%, #cdd8f4 28%, #dde3f8 55%, #eeeef8 78%, #f7f7fd 100%);
+      background: linear-gradient(180deg, #aacce8 0%, #c0dcf0 28%, #d8eaf8 55%, #edf4fb 78%, #f6fafe 100%);
       min-height: 100vh;
     }
     .bg-crystal {
@@ -21,8 +21,8 @@
       mix-blend-mode: multiply; opacity: 1;
     }
     .emblem-50 {
-      position: fixed; top: -24px; right: -36px;
-      width: 320px; pointer-events: none; z-index: 10;
+      position: fixed; top: -30px; right: -40px;
+      width: 220px; pointer-events: none; z-index: 10;
       mix-blend-mode: multiply;
     }
     .wrapper {
@@ -35,7 +35,7 @@
     .top-header { flex-shrink: 0; margin-bottom: 8px; }
     .campaign-label {
       font-size: 10px; font-weight: 600;
-      color: #3a4080; letter-spacing: 1px; margin-bottom: 4px;
+      color: #1a4870; letter-spacing: 1px; margin-bottom: 4px;
     }
     .beyond-logo { fill: #040000; width: 68%; height: auto; display: block; }
     .game-section {
@@ -44,19 +44,19 @@
       margin-bottom: 12px;
     }
     .game-text { flex: 1; }
-    .game-title { font-size: 26px; font-weight: 900; color: #5a1080; line-height: 1.1; }
-    .game-sub   { font-size: 12px; font-weight: 600; color: #7a3888; margin-top: 3px; }
+    .game-title { font-size: 26px; font-weight: 900; color: #7a4800; line-height: 1.1; }
+    .game-sub   { font-size: 12px; font-weight: 600; color: #8a5818; margin-top: 3px; }
     .game-icon {
       width: 76px; height: 76px; border-radius: 50%;
       overflow: hidden; flex-shrink: 0;
     }
-    .game-icon img { display: block; width: 1123px; height: auto; margin-left: -201px; margin-top: -438px; }
+    .game-icon img { display: block; width: 1123px; height: auto; margin-left: -204px; margin-top: -542px; }
     .form-card {
       flex: 1; min-height: 0;
-      background: rgba(228,210,248,0.78);
+      background: rgba(205,230,248,0.78);
       border-radius: 22px;
       border: 2px solid rgba(255,255,255,0.95);
-      box-shadow: 0 8px 32px rgba(80,30,150,0.10);
+      box-shadow: 0 8px 32px rgba(20,80,150,0.10);
       backdrop-filter: blur(18px);
       padding: 18px 18px 14px;
       display: flex; flex-direction: column; gap: 13px;
@@ -64,38 +64,38 @@
     }
     .field-label {
       display: flex; align-items: center; gap: 8px;
-      font-size: 12px; font-weight: 700; color: #1a1a40;
+      font-size: 12px; font-weight: 700; color: #1a2840;
       margin-bottom: 8px;
     }
     .step-num {
       width: 20px; height: 20px; border-radius: 50%;
-      background: #3a1a6a; color: #fff;
+      background: #1a3a60; color: #fff;
       font-size: 11px; font-weight: 800;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .input-wrap { position: relative; }
     .field-input {
       width: 100%; height: 50px;
-      background: #fff; border: 1.5px solid #dddaf0;
+      background: #fff; border: 1.5px solid #dce8f0;
       border-radius: 12px; padding: 0 16px;
-      font-size: 20px; font-weight: 700; color: #0b1030;
+      font-size: 20px; font-weight: 700; color: #0b1830;
       font-family: inherit; outline: none; transition: border-color 0.2s;
     }
-    .field-input:focus { border-color: #8030a8; box-shadow: 0 0 0 3px rgba(128,48,168,0.12); }
+    .field-input:focus { border-color: #d07010; box-shadow: 0 0 0 3px rgba(208,112,16,0.12); }
     .field-unit {
       position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      font-size: 14px; font-weight: 700; color: #8068aa;
+      font-size: 14px; font-weight: 700; color: #9880aa;
     }
     .site-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
     .site-btn {
       height: 44px;
-      background: #f2f0fb; border: 1.5px solid #d8d0ec;
+      background: #f0f5f8; border: 1.5px solid #d0dce8;
       border-radius: 10px;
-      font-size: 13px; font-weight: 700; color: #5a4880;
+      font-size: 13px; font-weight: 700; color: #4a6070;
       cursor: pointer; transition: all 0.18s; font-family: inherit;
     }
     .site-btn:active { transform: scale(0.96); }
-    .site-btn.selected { background: #3a1a6a; border-color: #3a1a6a; color: #fff; }
+    .site-btn.selected { background: #1a3a60; border-color: #1a3a60; color: #fff; }
     .submit-btn {
       width: 100%; height: 54px;
       background: linear-gradient(135deg, #003984, #1060d0);
@@ -111,14 +111,14 @@
     .page-footer {
       flex-shrink: 0;
       background: rgba(255,255,255,0.92);
-      border-top: 1px solid rgba(220,218,244,0.8);
+      border-top: 1px solid rgba(210,228,244,0.8);
       padding: 10px 22px;
       display: flex; align-items: center; justify-content: center;
     }
-    .footer-logo { height: 32px; filter: brightness(0); }
+    .footer-logo { height: 32px; }
     .toast {
       position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-      background: rgba(10,10,40,0.88); color: #fff;
+      background: rgba(10,20,40,0.88); color: #fff;
       padding: 10px 24px; border-radius: 30px;
       font-size: 14px; font-weight: 600;
       pointer-events: none; opacity: 0; transition: opacity 0.3s;
@@ -133,7 +133,7 @@
      src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/파란 보석 그래픽들_세로형.png"
      alt="" />
 <img class="emblem-50"
-     src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/빨간 50주년 엠블럼.png"
+     src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/엠블럼_크롭.png"
      alt="" />
 
 <div class="wrapper">
@@ -157,19 +157,19 @@
 
   <div class="game-section">
     <div class="game-text">
-      <div class="game-title">컨트롤 챌린지</div>
-      <div class="game-sub">흔들림 없이 나아간 50년</div>
+      <div class="game-title">점프업 챌린지</div>
+      <div class="game-sub">도약을 향해 뛰는 50년</div>
     </div>
-    <div class="game-icon"><img src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/SVG/챌린지 아이콘 3종.svg" alt="컨트롤" /></div>
+    <div class="game-icon"><img src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/SVG/챌린지 아이콘 3종.svg" alt="점프업" /></div>
   </div>
 
   <div class="form-card">
     <div class="field-group">
       <div class="field-label"><span class="step-num">①</span> 스코어 입력</div>
       <div class="input-wrap">
-        <input class="field-input" id="score" type="number" inputmode="decimal"
-               placeholder="" autocomplete="off" step="0.01" />
-        <span class="field-unit">초</span>
+        <input class="field-input" id="score" type="number" inputmode="numeric"
+               placeholder="" autocomplete="off" />
+        <span class="field-unit">cm</span>
       </div>
     </div>
     <div class="field-group">
@@ -217,8 +217,12 @@
     if (!score) { showToast('스코어를 입력해주세요.'); return; }
     if (!name)  { showToast('이름을 입력해주세요.'); return; }
     if (!selectedSite) { showToast('소속을 선택해주세요.'); return; }
-    console.log('Submit:', { game:'control', score, name, site: selectedSite });
-    showToast('등록되었습니다!');
+    fetch('/api/scores', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ game: 'jump', score: Number(score), name, site: selectedSite })
+    }).then(r => r.ok ? showToast('등록되었습니다!') : showToast('오류가 발생했습니다.'))
+      .catch(() => showToast('서버 연결 오류'));
     document.getElementById('score').value = '';
     document.getElementById('name').value  = '';
     document.querySelectorAll('.site-btn').forEach(b => b.classList.remove('selected'));

@@ -278,53 +278,17 @@
             </span>`;
   }
 
-  const MOCK = {
-    typing: [
-      {name:'홍길동', site:'창원2공장', score:369},
-      {name:'김민석', site:'창원1공장', score:360},
-      {name:'김건욱', site:'의왕',     score:326},
-      {name:'이준호', site:'서산',     score:318},
-      {name:'박수현', site:'평택',     score:305},
-      {name:'최영진', site:'창원3공장', score:298},
-      {name:'정민철', site:'의왕',     score:295},
-      {name:'강다은', site:'평택',     score:292},
-      {name:'김창식', site:'평택',     score:290},
-      {name:'김동현', site:'서산',     score:288},
-    ],
-    control: [
-      {name:'홍길동', site:'창원2공장', score:'7.34'},
-      {name:'김민석', site:'창원1공장', score:'8.12'},
-      {name:'김건욱', site:'의왕',     score:'8.55'},
-      {name:'이준호', site:'서산',     score:'9.01'},
-      {name:'박수현', site:'평택',     score:'9.44'},
-      {name:'최영진', site:'창원3공장', score:'10.22'},
-      {name:'정민철', site:'의왕',     score:'10.78'},
-      {name:'강다은', site:'평택',     score:'11.03'},
-      {name:'김창식', site:'평택',     score:'11.45'},
-      {name:'김동현', site:'서산',     score:'12.10'},
-    ],
-    jump: [
-      {name:'홍길동', site:'창원2공장', score:197},
-      {name:'김민석', site:'창원1공장', score:192},
-      {name:'김건욱', site:'의왕',     score:189},
-      {name:'이준호', site:'서산',     score:186},
-      {name:'박수현', site:'평택',     score:184},
-      {name:'최영진', site:'창원3공장', score:183},
-      {name:'정민철', site:'의왕',     score:182},
-      {name:'강다은', site:'평택',     score:180},
-      {name:'김창식', site:'평택',     score:179},
-      {name:'김동현', site:'서산',     score:178},
-    ],
-  };
-
-  const UNITS = {typing:'CPM', control:'초', jump:'cm'};
-  const RANK_LABELS = ['1', '2', '3'];
+  const UNITS = {typing:'CPM', control:'회', jump:'cm'};
 
   function render(id, list, unit) {
     const el = document.getElementById(id);
+    if (!list || list.length === 0) {
+      el.innerHTML = '<div style="text-align:center;padding:40px;opacity:0.4">아직 등록된 기록이 없습니다</div>';
+      return;
+    }
     el.innerHTML = list.map((d, i) => `
       <div class="rank-item r${i+1}">
-        <div class="rank-badge">${i < 3 ? RANK_LABELS[i] : i+1}</div>
+        <div class="rank-badge">${i + 1}</div>
         <div class="rank-info">
           <div class="rank-name">${d.name}</div>
           <div>${chip(d.site)}</div>
@@ -342,9 +306,19 @@
       `${z(n.getHours())}:${z(n.getMinutes())}:${z(n.getSeconds())}`;
   }
 
-  render('list-typing',  MOCK.typing,  UNITS.typing);
-  render('list-control', MOCK.control, UNITS.control);
-  render('list-jump',    MOCK.jump,    UNITS.jump);
+  function fetchRankings() {
+    fetch('/api/rankings')
+      .then(r => r.json())
+      .then(data => {
+        render('list-typing',  data.typing,  UNITS.typing);
+        render('list-control', data.control, UNITS.control);
+        render('list-jump',    data.jump,    UNITS.jump);
+      })
+      .catch(() => {});
+  }
+
+  fetchRankings();
+  setInterval(fetchRankings, 5000);
   tick();
   setInterval(tick, 1000);
 </script>
