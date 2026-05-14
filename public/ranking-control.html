@@ -2,153 +2,189 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>컨트롤 챌린지 — 등록</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>컨트롤 챌린지 랭킹 - BEYOND MOTION</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow: hidden; }
+    html, body { }
     body {
       font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
       background: linear-gradient(180deg, #b8c8ee 0%, #cdd8f4 28%, #dde3f8 55%, #eeeef8 78%, #f7f7fd 100%);
       min-height: 100vh;
     }
+
+    /* ── Crystal BG ── */
     .bg-crystal {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
-      object-fit: contain; object-position: center;
+      object-fit: cover;
       pointer-events: none; z-index: 0;
-      mix-blend-mode: multiply; opacity: 1;
+      mix-blend-mode: multiply;
+      opacity: 0.9;
     }
-    .emblem-50 {
-      position: absolute; top: -1.2vh; right: -0.5vw;
-      height: 28vh; width: auto;
-      pointer-events: none; z-index: 10;
-    }
+
+    /* ── Wrapper ── */
     .wrapper {
       position: relative; z-index: 1;
-      height: 100vh;
-      display: flex; flex-direction: column;
-      padding: 1.5vh 4vw 0;
-      max-width: 500px; margin: 0 auto;
+      max-width: 500px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 20px 20px 0;
     }
-    .top-header { flex-shrink: 0; margin-bottom: 0.8vh; text-align: center; }
+
+    /* ── 50th Emblem ── */
+    .emblem-50 {
+      position: absolute; top: -10px; right: -10px;
+      width: 280px;
+      pointer-events: none; z-index: 10;
+    }
+
+    /* ── Page Header ── */
+    .page-header {
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 18px;
+      padding-top: 10px;
+    }
     .campaign-label {
-      font-size: 1.6vh; font-weight: 600;
-      color: #3a4080; letter-spacing: 0.1em; margin-bottom: 0.5vh;
+      font-size: 13px; font-weight: 700;
+      color: #3a4080; letter-spacing: 2px;
+      margin-bottom: 2px;
     }
-    .beyond-logo { fill: #040000; height: 22vh; width: auto; max-width: 75%; display: block; margin: 0 auto; }
-    .game-section {
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; gap: 2.5vw;
-      margin-bottom: 1.2vh;
+    .beyond-logo {
+      fill: #040000;
+      width: 44%;
+      display: block;
+      margin: 4px 0;
     }
-    .game-text { text-align: center; }
-    .game-title { font-size: 3.2vh; font-weight: 900; color: #5a1080; line-height: 1.1; }
-    .game-sub   { font-size: 1.5vh; font-weight: 600; color: #7a3888; margin-top: 0.3vh; }
+
+    /* ── Game Header ── */
+    .game-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 16px;
+    }
     .game-icon {
-      width: 8vh; height: 8vh; border-radius: 50%;
+      width: 76px; height: 76px; border-radius: 50%;
       overflow: hidden; flex-shrink: 0;
     }
     .game-icon img {
-      display: block;
-      width: calc(1123 / 76 * 8vh); height: auto;
-      margin-left: calc(-201 / 76 * 8vh);
-      margin-top: calc(-438 / 76 * 8vh);
+      display: block; width: 1123px; height: auto; flex-shrink: 0;
+      margin-left: -201px; margin-top: -438px;
     }
-    .form-card {
-      flex: 1; min-height: 0;
+    .game-header-info { flex: 1; min-width: 0; }
+    .game-title {
+      font-size: 28px; font-weight: 900;
+      color: #5a1080;
+    }
+    .game-sub {
+      font-size: 14px; font-weight: 600;
+      color: #7a3888; margin-top: 2px;
+    }
+
+    /* ── Ranking Card ── */
+    .ranking-card {
       background: rgba(228,210,248,0.78);
-      border-radius: 2.5vh;
-      border: 2px solid rgba(255,255,255,0.95);
-      box-shadow: 0 0.8vh 3vh rgba(80,30,150,0.10);
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(80,30,150,0.10);
       backdrop-filter: blur(18px);
-      padding: 2vh 3.5vw 1.5vh;
-      display: flex; flex-direction: column; gap: 1.5vh;
-      overflow-y: auto;
+      padding: 16px 14px 20px;
+      margin-bottom: 24px;
     }
-    .field-label {
-      display: flex; align-items: center; gap: 1.5vw;
-      font-size: 1.5vh; font-weight: 700; color: #1a1a40;
-      margin-bottom: 0.8vh;
+
+    /* ── Rank Items ── */
+    .rank-item {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.82);
+      border-radius: 14px;
+      border: 1.5px solid rgba(255,255,255,0.95);
+      box-shadow: 0 2px 8px rgba(20,70,150,0.05);
+      padding: 10px 16px;
+      margin-bottom: 8px;
     }
-    .step-num {
-      width: 2.5vh; height: 2.5vh; border-radius: 50%;
-      background: #3a1a6a; color: #fff;
-      font-size: 1.3vh; font-weight: 800;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    .rank-item:last-child { margin-bottom: 0; }
+    .rank-item.r1 { background: rgba(255,255,255,0.96); box-shadow: 0 4px 18px rgba(20,70,150,0.10); }
+
+    .rank-badge {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 900; flex-shrink: 0;
+      background: rgba(170,205,235,0.35); color: #4a6a8a;
     }
-    .input-wrap { position: relative; }
-    .field-input {
-      width: 100%; height: 5.5vh;
-      background: #fff; border: 1.5px solid #dddaf0;
-      border-radius: 1.4vh; padding: 0 3vw;
-      font-size: 2.3vh; font-weight: 700; color: #0b1030;
-      font-family: inherit; outline: none; transition: border-color 0.2s;
+    .r1 .rank-badge { background: linear-gradient(135deg, #f8d060, #e8a020); color: #fff; font-size: 16px; }
+    .r2 .rank-badge { background: linear-gradient(135deg, #d0d8e4, #a8b8c8); color: #fff; font-size: 16px; }
+    .r3 .rank-badge { background: linear-gradient(135deg, #d8a070, #c07040); color: #fff; font-size: 16px; }
+
+    .rank-info { flex: 1; min-width: 0; }
+    .rank-name {
+      font-size: 15px; font-weight: 800; color: #0b1f3a;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .field-input:focus { border-color: #8030a8; box-shadow: 0 0 0 3px rgba(128,48,168,0.12); }
-    .field-unit {
-      position: absolute; right: 3vw; top: 50%; transform: translateY(-50%);
-      font-size: 1.7vh; font-weight: 700; color: #8068aa;
+    .r1 .rank-name { font-size: 17px; }
+
+    .site-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 700;
+      padding: 2px 8px 2px 5px; border-radius: 20px; margin-top: 2px;
     }
-    .site-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8vh; }
-    .site-btn {
-      height: 5vh;
-      background: #f2f0fb; border: 1.5px solid #d8d0ec;
-      border-radius: 1.2vh;
-      font-size: 1.5vh; font-weight: 700; color: #5a4880;
-      cursor: pointer; transition: all 0.18s; font-family: inherit;
-    }
-    .site-btn:active { transform: scale(0.96); }
-    .site-btn.selected { background: #3a1a6a; border-color: #3a1a6a; color: #fff; }
-    .submit-btn {
-      width: 100%; height: 6.2vh;
-      background: linear-gradient(135deg, #003984, #1060d0);
-      border: none; border-radius: 1.6vh;
-      color: #fff; font-size: 2.1vh; font-weight: 800;
-      letter-spacing: 0.15em; cursor: pointer; font-family: inherit;
-      box-shadow: 0 0.4vh 2vh rgba(0,57,132,0.35);
-      transition: opacity 0.2s, transform 0.15s;
-      display: flex; align-items: center; justify-content: center; gap: 1vw;
-      flex-shrink: 0;
-    }
-    .submit-btn:active { opacity: 0.88; transform: scale(0.98); }
-    .page-footer {
-      flex-shrink: 0;
-      padding: 1vh 3vw;
+    .site-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+    .rank-score { text-align: right; flex-shrink: 0; }
+    .score-num { font-size: 20px; font-weight: 900; color: #0b1f3a; }
+    .r1 .score-num { font-size: 24px; }
+    .score-unit { font-size: 10px; color: #6888aa; margin-top: 1px; }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 16px 0 24px;
       display: flex; align-items: center; justify-content: center;
     }
-    .footer-logo { height: 4.5vh; }
-    .toast {
-      position: fixed; bottom: 10vh; left: 50%; transform: translateX(-50%);
-      background: rgba(10,10,40,0.88); color: #fff;
-      padding: 1.2vh 4vw; border-radius: 30px;
-      font-size: 1.7vh; font-weight: 600;
-      pointer-events: none; opacity: 0; transition: opacity 0.3s;
-      z-index: 100; white-space: nowrap;
+    .footer-logo { height: 48px; }
+
+    /* ── Responsive ── */
+    @media (min-width: 600px) {
+      .wrapper { max-width: 640px; padding: 24px 28px 0; }
+      .campaign-label { font-size: 17px; letter-spacing: 2px; }
+      .beyond-logo { width: 52%; }
+      .game-title { font-size: 34px; }
+      .game-sub { font-size: 16px; }
+      .emblem-50 { width: 340px; }
+      .footer-logo { height: 56px; }
     }
-    .toast.show { opacity: 1; }
+    @media (min-width: 900px) {
+      .wrapper { max-width: 700px; padding: 28px 32px 0; }
+      .campaign-label { font-size: 18px; }
+      .game-title { font-size: 36px; }
+      .emblem-50 { width: 380px; }
+    }
   </style>
 </head>
 <body>
 
+<!-- Crystal BG (vertical layout) -->
 <img class="bg-crystal"
      src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/파란 보석 그래픽들_세로형.png"
      alt="" />
+
 <div class="wrapper">
 
-<img class="emblem-50"
-     src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/엠블럼_크롭.png"
-     alt="" />
-  <div class="top-header">
+  <!-- 50th Anniversary Emblem -->
+  <img class="emblem-50"
+       src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/엠블럼_크롭.png"
+       alt="" />
+
+  <div class="page-header">
     <div class="campaign-label">현대위아 창립 50주년 연간 캠페인</div>
+
+    <!-- BEYOND MOTION stacked logo -->
     <svg class="beyond-logo" viewBox="722 508 362 338" xmlns="http://www.w3.org/2000/svg">
+      <!-- BEYOND -->
       <path d="M727.62,664.86v-151.37h24.09c16.18,0,22.44,7.54,22.44,25.93v30.35c0,9.38-3.13,15.08-9.2,16.74,5.89,1.29,11.04,5.7,11.04,16.74v36.05c0,17.84-8.09,25.57-24.28,25.57h-24.09ZM761.1,539.24c0-8.64-2.57-11.59-9.38-11.59h-10.12v53.52h10.3c6.62,0,9.2-2.94,9.2-10.12v-31.82ZM761.65,605.64c0-8.64-1.84-12.14-9.75-12.14h-10.3v57.57h10.12c6.62,0,9.93-3.86,9.93-11.77v-33.66Z"/>
       <path d="M787.4,664.86v-151.37h40.09v14.16h-26.12v53.15h18.39v13.98h-18.39v56.28h27.04v13.79h-41.01Z"/>
       <path d="M855.26,664.86v-67.87l-21.34-83.5h14.71c4.78,19.86,12.32,51.5,14.35,62.35,2.02-10.85,9.56-42.3,14.9-62.35h13.61l-22.07,83.5v67.87h-14.16Z"/>
       <path d="M895.91,537.59c0-17.1,7.91-25.75,23.73-25.75s23.91,8.64,23.91,25.75v103.18c0,17.1-7.91,25.75-23.91,25.75s-23.73-8.64-23.73-25.75v-103.18ZM929.56,537.59c0-7.72-3.31-11.59-9.93-11.59s-9.75,3.86-9.75,11.59v103.18c0,7.91,3.31,11.95,9.75,11.95s9.93-4.05,9.93-11.95v-103.18Z"/>
       <path d="M993.75,664.86l-26.12-110.54c.18,22.99.18,44.14.18,67.13v43.41h-12.14v-151.37h16.74l23.17,110.91c-.18-20.78-.18-40.46-.18-61.25v-49.66h12.32v151.37h-13.98Z"/>
       <path d="M1021.16,664.86v-151.37h23.54c16.18,0,23.91,9.75,23.91,25.93v99.69c0,17.1-7.91,25.75-23.91,25.75h-23.54ZM1054.63,539.61c0-7.54-3.31-11.95-9.93-11.95h-9.56v123.41h9.56c6.62,0,9.93-4.05,9.93-11.95v-99.5Z"/>
+      <!-- MOTION -->
       <path d="M786.19,841.44v-47.44c0-23.05.19-44.77.38-67.82l-16.96,115.26h-12.76l-16.77-115.26c.19,23.05.38,44.77.38,67.82v47.44h-13.34v-156.8h19.43l16.58,122.5,16.57-122.5h20v156.8h-13.53Z"/>
       <path d="M812.29,709.6c0-17.72,8.19-26.67,24.58-26.67s24.77,8.95,24.77,26.67v106.88c0,17.72-8.19,26.67-24.77,26.67s-24.58-8.95-24.58-26.67v-106.88ZM847.15,709.6c0-8-3.43-12-10.29-12s-10.1,4-10.1,12v106.88c0,8.19,3.43,12.38,10.1,12.38s10.29-4.19,10.29-12.38v-106.88Z"/>
       <path d="M883.92,841.44v-142.13h-17.53v-14.67h49.34v14.67h-17.53v142.13h-14.29Z"/>
@@ -158,42 +194,24 @@
     </svg>
   </div>
 
-  <div class="game-section">
-    <div class="game-text">
+  <!-- Game Title Section -->
+  <div class="game-header">
+    <div class="game-icon">
+      <img src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/SVG/챌린지 아이콘 3종.svg" alt="컨트롤" />
+    </div>
+    <div class="game-header-info">
       <div class="game-title">컨트롤 챌린지</div>
       <div class="game-sub">흔들림 없이 나아간 50년</div>
     </div>
-    <div class="game-icon"><img src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/SVG/챌린지 아이콘 3종.svg" alt="컨트롤" /></div>
   </div>
 
-  <div class="form-card">
-    <div class="field-group">
-      <div class="field-label"><span class="step-num">①</span> 스코어 입력</div>
-      <div class="input-wrap">
-        <input class="field-input" id="score" type="number" inputmode="decimal"
-               placeholder="" autocomplete="off" step="0.01" />
-        <span class="field-unit">초</span>
-      </div>
-    </div>
-    <div class="field-group">
-      <div class="field-label"><span class="step-num">②</span> 사용자 이름 입력</div>
-      <input class="field-input" id="name" type="text" placeholder="" autocomplete="off" />
-    </div>
-    <div class="field-group">
-      <div class="field-label"><span class="step-num">③</span> 소속 선택</div>
-      <div class="site-grid">
-        <button class="site-btn" data-site="창원1공장" onclick="selectSite(this)">창원1공장</button>
-        <button class="site-btn" data-site="창원2공장" onclick="selectSite(this)">창원2공장</button>
-        <button class="site-btn" data-site="창원3공장" onclick="selectSite(this)">창원3공장</button>
-        <button class="site-btn" data-site="의왕"     onclick="selectSite(this)">의왕</button>
-        <button class="site-btn" data-site="서산"     onclick="selectSite(this)">서산</button>
-        <button class="site-btn" data-site="평택"     onclick="selectSite(this)">평택</button>
-      </div>
-    </div>
-    <button class="submit-btn" onclick="submit()">등록하기 ›</button>
+  <!-- Ranking Card -->
+  <div class="ranking-card">
+    <div id="rank-list"></div>
   </div>
 
-  <div class="page-footer">
+  <!-- Footer -->
+  <div class="footer">
     <svg class="footer-logo" viewBox="130 198 315 85" xmlns="http://www.w3.org/2000/svg" fill="#003984" stroke="none">
       <polygon points="148.54 217.13 141.4 217.13 141.4 211.16 138.04 211.16 138.04 226.43 141.4 226.43 141.4 220.1 148.54 220.1 148.54 226.43 151.88 226.43 151.88 211.16 148.54 211.16 148.54 217.13"/>
       <polygon points="161.13 217.84 157.06 211.16 153.07 211.16 159.33 220.79 159.33 226.43 162.92 226.43 162.92 220.79 169.17 211.16 165.19 211.16 161.13 217.84"/>
@@ -225,39 +243,95 @@
       <path d="M376.99,231.27c-1.77-1.77-3.83-3.1-6.13-4.07-2.38-1.01-4.91-1.27-7.51-1.27-.23,0-.45,0-.68.01v-7.1h18.44l5.61-7.86h-32.15v26.52c2.07-2.56,5.24-3.89,8.78-3.89,6.24,0,11.29,5.05,11.29,11.29s-5.06,11.29-11.29,11.29c-4.28,0-8.01-2.39-9.92-5.9l-7.01,3.81c3.38,6.23,9.88,10.09,16.96,10.09,2.6,0,5.13-.51,7.51-1.52,2.3-.97,4.36-2.36,6.13-4.13s3.16-3.83,4.13-6.13c1.01-2.38,1.52-4.91,1.52-7.51s-.51-5.13-1.52-7.51c-.97-2.3-2.36-4.36-4.13-6.13"/>
     </svg>
   </div>
+
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
-  let selectedSite = '';
-  function selectSite(el) {
-    document.querySelectorAll('.site-btn').forEach(b => b.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedSite = el.dataset.site;
+  const SITE_COLORS = {
+    '의왕': [59,130,246], '평택': [16,185,129], '서산': [245,158,11],
+    '창원1공장': [139,92,246], '창원2공장': [239,68,68], '창원3공장': [6,182,212],
+  };
+
+  function chip(site) {
+    const [r,g,b] = SITE_COLORS[site] || [120,150,180];
+    return '<span class="site-chip" style="background:rgba('+r+','+g+','+b+',0.10);border:1px solid rgba('+r+','+g+','+b+',0.30);color:rgb('+r+','+g+','+b+')">' +
+           '<span class="site-dot" style="background:rgb('+r+','+g+','+b+')"></span>' + site +
+           '</span>';
   }
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2200);
+
+  const MOCK_DATA = [
+    {name:'이승우',site:'의왕',score:12.34},
+    {name:'김하린',site:'창원2공장',score:13.08},
+    {name:'박도윤',site:'평택',score:14.52},
+    {name:'정서아',site:'창원1공장',score:15.21},
+    {name:'최현우',site:'서산',score:16.05},
+    {name:'한예린',site:'창원3공장',score:16.88},
+    {name:'오지호',site:'의왕',score:17.42},
+    {name:'윤서현',site:'창원1공장',score:18.15},
+    {name:'강태민',site:'평택',score:19.03},
+    {name:'임수빈',site:'서산',score:19.77},
+    {name:'송지원',site:'창원2공장',score:20.14},
+    {name:'조민혁',site:'의왕',score:20.89},
+    {name:'유하은',site:'창원3공장',score:21.35},
+    {name:'배성준',site:'평택',score:22.01},
+    {name:'노예진',site:'서산',score:22.67},
+    {name:'황도현',site:'창원1공장',score:23.44},
+    {name:'서민아',site:'의왕',score:24.12},
+    {name:'안우진',site:'창원2공장',score:24.88},
+    {name:'전지유',site:'평택',score:25.55},
+    {name:'권승현',site:'서산',score:26.21},
+    {name:'문하은',site:'창원3공장',score:27.03},
+    {name:'신준서',site:'의왕',score:27.89},
+    {name:'장가연',site:'창원1공장',score:28.56},
+    {name:'고태민',site:'평택',score:29.34},
+    {name:'백수연',site:'서산',score:30.12},
+    {name:'허지호',site:'창원2공장',score:31.05},
+    {name:'남서현',site:'의왕',score:32.18},
+    {name:'양민지',site:'창원3공장',score:33.01},
+    {name:'손재원',site:'평택',score:34.22},
+    {name:'류가영',site:'서산',score:35.10}
+  ];
+
+  function render(list) {
+    var el = document.getElementById('rank-list');
+    if (!list || list.length === 0) {
+      el.innerHTML = '<div style="text-align:center;padding:40px;opacity:0.4">아직 등록된 기록이 없습니다</div>';
+      return;
+    }
+    el.innerHTML = list.map(function(d, i) {
+      var rank = i + 1;
+      var cls = rank <= 3 ? ' r' + rank : '';
+      return '<div class="rank-item' + cls + '">' +
+        '<div class="rank-badge">' + rank + '</div>' +
+        '<div class="rank-info">' +
+          '<div class="rank-name">' + d.name + '</div>' +
+          '<div>' + chip(d.site) + '</div>' +
+        '</div>' +
+        '<div class="rank-score">' +
+          '<div class="score-num">' + d.score.toFixed(2) + '</div>' +
+          '<div class="score-unit">초</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
   }
-  function submit() {
-    const score = document.getElementById('score').value.trim();
-    const name  = document.getElementById('name').value.trim();
-    if (!score) { showToast('스코어를 입력해주세요.'); return; }
-    if (!name)  { showToast('이름을 입력해주세요.'); return; }
-    if (!selectedSite) { showToast('소속을 선택해주세요.'); return; }
-    fetch('/api/scores', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ game: 'control', score: Number(score), name, site: selectedSite })
-    }).then(r => r.ok ? showToast('등록되었습니다!') : showToast('오류가 발생했습니다.'))
-      .catch(() => showToast('서버 연결 오류'));
-    document.getElementById('score').value = '';
-    document.getElementById('name').value  = '';
-    document.querySelectorAll('.site-btn').forEach(b => b.classList.remove('selected'));
-    selectedSite = '';
+
+  function fetchRankings() {
+    fetch('/api/rankings?game=control')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var list = Array.isArray(data) ? data : (data.control || data.rankings || []);
+        if (list.length > 0) {
+          render(list);
+        } else {
+          render(MOCK_DATA);
+        }
+      })
+      .catch(function() {
+        render(MOCK_DATA);
+      });
   }
+
+  fetchRankings();
 </script>
 </body>
 </html>
