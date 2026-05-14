@@ -22,6 +22,8 @@ function adminAuth(req, res, next) {
   res.status(401).send('Unauthorized');
 }
 
+app.get('/', (req, res) => res.redirect('/ranking.html'));
+
 app.get('/admin', adminAuth, (req, res) => {
   res.sendFile('admin.html', { root: 'public' });
 });
