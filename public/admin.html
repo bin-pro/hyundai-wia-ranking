@@ -546,7 +546,7 @@
     document.getElementById('modalOverlay').classList.remove('show');
   }
 
-  function saveEntry() {
+  async function saveEntry() {
     const score   = Number(document.getElementById('mScore').value);
     const name    = document.getElementById('mName').value.trim();
     const contact = document.getElementById('mContact').value.trim();
