@@ -280,39 +280,6 @@
       </div>`).join('');
   }
 
-  const MOCK = [
-    {name:'박서준',site:'창원1공장',score:285},
-    {name:'김예은',site:'서산',score:272},
-    {name:'이도현',site:'의왕',score:258},
-    {name:'정민아',site:'평택',score:245},
-    {name:'최우진',site:'창원2공장',score:232},
-    {name:'한지유',site:'창원3공장',score:218},
-    {name:'오승현',site:'의왕',score:205},
-    {name:'윤하은',site:'창원1공장',score:192},
-    {name:'강준서',site:'서산',score:180},
-    {name:'임가연',site:'평택',score:168},
-    {name:'송태양',site:'창원2공장',score:162},
-    {name:'배수지',site:'의왕',score:155},
-    {name:'노진우',site:'창원3공장',score:150},
-    {name:'황미래',site:'서산',score:146},
-    {name:'서강민',site:'평택',score:141},
-    {name:'권예솔',site:'창원1공장',score:137},
-    {name:'조하랑',site:'의왕',score:132},
-    {name:'유채원',site:'창원2공장',score:128},
-    {name:'문정훈',site:'서산',score:123},
-    {name:'장서윤',site:'평택',score:118},
-    {name:'신동혁',site:'창원3공장',score:114},
-    {name:'고은비',site:'의왕',score:110},
-    {name:'손현수',site:'창원1공장',score:106},
-    {name:'안지현',site:'서산',score:102},
-    {name:'전우성',site:'평택',score:99},
-    {name:'홍세아',site:'창원2공장',score:96},
-    {name:'남기태',site:'창원3공장',score:93},
-    {name:'이하율',site:'의왕',score:90},
-    {name:'김도아',site:'서산',score:87},
-    {name:'백승리',site:'평택',score:85}
-  ];
-
   function fetchRankings() {
     fetch('/api/rankings?game=jump')
       .then(r => r.json())
@@ -320,9 +287,7 @@
         const list = Array.isArray(data) ? data : (data.jump || data.rankings || []);
         render(list);
       })
-      .catch(() => {
-        render(MOCK);
-      });
+      .catch(() => {});
   }
 
   fetchRankings();
