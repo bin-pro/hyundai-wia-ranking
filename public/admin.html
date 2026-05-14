@@ -404,6 +404,7 @@
 </div>
 
 <script>
+  const API_BASE = (location.port && location.port !== '3000') ? 'http://localhost:3000' : '';
   /* ── Data ──────────────────────────────────────── */
   const SITE_COLORS = {
     '의왕':     [59,130,246],
@@ -422,7 +423,7 @@
   let entries = [];
 
   async function loadEntries() {
-    const res = await fetch('/api/scores');
+    const res = await fetch(API_BASE + '/api/scores');
     entries = (await res.json()).map(e => ({
       id: e.id, score: e.score, name: e.name,
       contact: e.phone, site: e.site, game: e.game, time: e.created_at
@@ -562,13 +563,13 @@
     const timeStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
     if (editingId === null) {
-      await fetch('/api/scores', {
+      await fetch(API_BASE + '/api/scores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ score, name, phone: contact, site, game })
       });
     } else {
-      await fetch(`/api/scores/${editingId}`, {
+      await fetch(`${API_BASE}/api/scores/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ score, name, phone: contact, site, game })
@@ -596,7 +597,7 @@
   }
   async function confirmDelete() {
     if (deletingId === null) return;
-    await fetch(`/api/scores/${deletingId}`, { method: 'DELETE' });
+    await fetch(`${API_BASE}/api/scores/${deletingId}`, { method: 'DELETE' });
     closeConfirm();
     await loadEntries();
   }

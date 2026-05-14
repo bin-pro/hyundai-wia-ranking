@@ -230,6 +230,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  const API_BASE = (location.port && location.port !== '3000') ? 'http://localhost:3000' : '';
   let selectedSite = '';
   function selectSite(el) {
     document.querySelectorAll('.site-btn').forEach(b => b.classList.remove('selected'));
@@ -247,7 +248,7 @@
     if (!score) { showToast('스코어를 입력해주세요.'); return; }
     if (!name)  { showToast('이름을 입력해주세요.'); return; }
     if (!selectedSite) { showToast('소속을 선택해주세요.'); return; }
-    fetch('/api/scores', {
+    fetch(API_BASE + '/api/scores', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ game: 'control', score: Number(score), name, site: selectedSite })

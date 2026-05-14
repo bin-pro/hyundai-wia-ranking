@@ -291,6 +291,7 @@
 </div>
 
 <script>
+  const API_BASE = (location.port && location.port !== '3000') ? 'http://localhost:3000' : '';
   const SITE_COLORS = {
     '의왕': [59,130,246], '평택': [16,185,129], '서산': [245,158,11],
     '창원1공장': [139,92,246], '창원2공장': [239,68,68], '창원3공장': [6,182,212],
@@ -332,7 +333,7 @@
   }
 
   function fetchRankings() {
-    fetch('/api/rankings')
+    fetch(API_BASE + '/api/rankings')
       .then(r => r.json())
       .then(data => {
         render('list-typing',  data.typing,  UNITS.typing);
