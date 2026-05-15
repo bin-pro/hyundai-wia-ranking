@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>랭킹 관리자 — HYUNDAI WIA Back Office</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,6 +43,27 @@
     }
     .btn-add:hover { background: #1a78f0; }
     .btn-add-icon { font-size: 16px; font-weight: 400; line-height: 1; }
+    .btn-excel {
+      background: #16a34a;
+      color: #fff; border: none;
+      border-radius: 10px;
+      font-size: 13px; font-weight: 700;
+      padding: 9px 16px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-excel:hover { background: #15803d; }
+    .btn-danger {
+      background: #1a2535;
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.4);
+      border-radius: 10px;
+      font-size: 13px; font-weight: 700;
+      padding: 9px 16px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.15); }
 
     /* ── Main layout ─────────────────────────────── */
     .main { padding: 24px 28px; max-width: 1400px; margin: 0 auto; }
@@ -108,6 +130,81 @@
       border-bottom: 1px solid #1e2d45;
       white-space: nowrap;
     }
+    .th-filter {
+      display: inline-flex; align-items: center; gap: 6px;
+      position: relative;
+    }
+    .filter-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px;
+      border-radius: 4px;
+      background: #1a2535;
+      color: #64748b;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .filter-icon:hover { background: #22334a; color: #e2e8f0; }
+    .filter-icon.active { background: rgba(245,196,0,0.15); color: #f5c400; }
+    .date-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #0d1a2a;
+      border: 1px solid #2a3d55;
+      border-radius: 10px;
+      padding: 10px;
+      min-width: 200px;
+      z-index: 80;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      display: none;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    .date-dropdown.show { display: block; }
+    .date-dropdown-title {
+      font-size: 10px; font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .date-option {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px; font-weight: 600;
+      color: #cbd5e1;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .date-option:hover { background: #1a2535; }
+    .date-option input[type="checkbox"] {
+      width: 14px; height: 14px;
+      accent-color: #f5c400;
+      cursor: pointer;
+    }
+    .date-dropdown-actions {
+      display: flex; gap: 6px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #1e2d45;
+    }
+    .date-mini-btn {
+      flex: 1;
+      background: #1a2535;
+      border: 1px solid #2a3d55;
+      border-radius: 6px;
+      color: #94a3b8;
+      font-size: 10px; font-weight: 700;
+      padding: 5px 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .date-mini-btn:hover { background: #22334a; color: #e2e8f0; }
     tbody tr { border-bottom: 1px solid #1a2535; transition: background 0.1s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: rgba(255,255,255,0.02); }
@@ -265,6 +362,12 @@
     <span class="header-badge">BACK OFFICE</span>
   </div>
   <div class="header-right">
+    <button class="btn-excel" onclick="downloadExcel()">
+      <span class="btn-add-icon">⬇</span> 엑셀 다운로드
+    </button>
+    <button class="btn-danger" onclick="openDeleteAll()">
+      <span class="btn-add-icon">🗑</span> 전체 삭제
+    </button>
     <button class="btn-add" onclick="openAddModal()">
       <span class="btn-add-icon">+</span> 항목 추가
     </button>
@@ -335,7 +438,20 @@
             <th>연락처</th>
             <th>소속</th>
             <th>게임</th>
-            <th>등록시간</th>
+            <th>
+              <span class="th-filter">
+                등록시간
+                <span class="filter-icon" id="dateFilterIcon" onclick="toggleDateDropdown(event)">▼</span>
+                <div class="date-dropdown" id="dateDropdown" onclick="event.stopPropagation()">
+                  <div class="date-dropdown-title">날짜 필터</div>
+                  <div id="dateOptions"></div>
+                  <div class="date-dropdown-actions">
+                    <button class="date-mini-btn" onclick="selectAllDates()">전체</button>
+                    <button class="date-mini-btn" onclick="clearAllDates()">해제</button>
+                  </div>
+                </div>
+              </span>
+            </th>
             <th>관리</th>
           </tr>
         </thead>
@@ -403,6 +519,19 @@
   </div>
 </div>
 
+<!-- DELETE ALL CONFIRM -->
+<div class="confirm-overlay" id="deleteAllOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">전체 데이터를 삭제하시겠습니까?</div>
+    <div class="confirm-sub">모든 랭킹 기록이 영구적으로 삭제됩니다.<br/>삭제 전 엑셀로 백업하는 것을 권장합니다.</div>
+    <div class="confirm-actions">
+      <button class="btn-confirm-cancel" onclick="closeDeleteAll()">취소</button>
+      <button class="btn-confirm-del" onclick="confirmDeleteAll()">전체 삭제</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const API_BASE = (location.port && location.port !== '3000') ? 'http://localhost:3000' : '';
   /* ── Data ──────────────────────────────────────── */
@@ -434,6 +563,7 @@
   /* ── Filter state ──────────────────────────────── */
   let gFilter = 'all';
   let sFilter = 'all';
+  let dateFilter = new Set(); // 빈 set = 전체 표시
 
   document.querySelectorAll('[data-gfilter]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -453,12 +583,130 @@
   });
 
   /* ── Render ────────────────────────────────────── */
+  function entryDate(e) {
+    return (e.time || '').slice(0, 10); // 'YYYY-MM-DD'
+  }
+
   function getFiltered() {
     return entries.filter(e => {
       if (gFilter !== 'all' && e.game !== gFilter) return false;
       if (sFilter !== 'all' && e.site !== sFilter) return false;
+      if (dateFilter.size > 0 && !dateFilter.has(entryDate(e))) return false;
       return true;
     }).sort((a, b) => b.score - a.score);
+  }
+
+  /* ── Date filter dropdown ──────────────────────── */
+  function renderDateOptions() {
+    const dates = [...new Set(entries.map(entryDate).filter(Boolean))].sort().reverse();
+    const wrap = document.getElementById('dateOptions');
+    if (dates.length === 0) {
+      wrap.innerHTML = '<div style="font-size:12px;color:#475569;padding:6px 8px">데이터 없음</div>';
+      return;
+    }
+    wrap.innerHTML = dates.map(d => {
+      const checked = dateFilter.size === 0 || dateFilter.has(d) ? 'checked' : '';
+      return `<label class="date-option">
+        <input type="checkbox" value="${d}" ${checked} onchange="toggleDate('${d}', this.checked)" />
+        ${d}
+      </label>`;
+    }).join('');
+  }
+
+  function toggleDate(d, checked) {
+    // dateFilter.size === 0 은 "전체"를 의미. 체크박스를 처음 만질 때 현재 보이는 모든 날짜로 초기화.
+    if (dateFilter.size === 0) {
+      [...new Set(entries.map(entryDate).filter(Boolean))].forEach(x => dateFilter.add(x));
+    }
+    if (checked) dateFilter.add(d); else dateFilter.delete(d);
+    updateDateFilterIcon();
+    render();
+  }
+
+  function selectAllDates() {
+    dateFilter.clear();
+    renderDateOptions();
+    updateDateFilterIcon();
+    render();
+  }
+
+  function clearAllDates() {
+    dateFilter = new Set(['__none__']); // 의도적으로 매칭되지 않는 값으로 0건 표시
+    renderDateOptions();
+    updateDateFilterIcon();
+    render();
+  }
+
+  function updateDateFilterIcon() {
+    const icon = document.getElementById('dateFilterIcon');
+    const allDates = [...new Set(entries.map(entryDate).filter(Boolean))];
+    const isAllSelected = dateFilter.size === 0 || allDates.every(d => dateFilter.has(d));
+    icon.classList.toggle('active', !isAllSelected);
+  }
+
+  function toggleDateDropdown(ev) {
+    ev.stopPropagation();
+    const dd = document.getElementById('dateDropdown');
+    const isShown = dd.classList.contains('show');
+    if (!isShown) renderDateOptions();
+    dd.classList.toggle('show');
+  }
+
+  document.addEventListener('click', (e) => {
+    const dd = document.getElementById('dateDropdown');
+    if (dd && dd.classList.contains('show') && !dd.contains(e.target) && e.target.id !== 'dateFilterIcon') {
+      dd.classList.remove('show');
+    }
+  });
+
+  /* ── Excel(XLSX) download ─────────────────────── */
+  function downloadExcel() {
+    if (typeof XLSX === 'undefined') {
+      alert('엑셀 라이브러리 로드 실패. 새로고침 후 다시 시도해주세요.');
+      return;
+    }
+    // 전체 데이터 — 필터 무시, 게임별 → 점수 내림차순 정렬
+    const all = [...entries].sort((a, b) => {
+      if (a.game !== b.game) return a.game.localeCompare(b.game);
+      return b.score - a.score;
+    });
+    const header = ['순위','게임','스코어','단위','성함','연락처','소속','등록시간'];
+    const ranksByGame = {};
+    const data = all.map(e => {
+      ranksByGame[e.game] = (ranksByGame[e.game] || 0) + 1;
+      return [
+        ranksByGame[e.game],
+        GAME_META[e.game]?.label || e.game,
+        e.score,
+        GAME_META[e.game]?.unit || '',
+        e.name,
+        e.contact || '',
+        e.site,
+        e.time || ''
+      ];
+    });
+    const ws = XLSX.utils.aoa_to_sheet([header, ...data]);
+    ws['!cols'] = [
+      { wch: 6 }, { wch: 10 }, { wch: 10 }, { wch: 6 },
+      { wch: 12 }, { wch: 16 }, { wch: 12 }, { wch: 20 },
+    ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '랭킹');
+    const today = new Date().toISOString().slice(0,10);
+    XLSX.writeFile(wb, `랭킹_${today}.xlsx`);
+  }
+
+  /* ── Delete all ──────────────────────────────── */
+  function openDeleteAll() {
+    document.getElementById('deleteAllOverlay').classList.add('show');
+  }
+  function closeDeleteAll() {
+    document.getElementById('deleteAllOverlay').classList.remove('show');
+  }
+  async function confirmDeleteAll() {
+    await fetch(API_BASE + '/api/scores', { method: 'DELETE' });
+    closeDeleteAll();
+    await loadEntries();
   }
 
   function siteChip(site) {
@@ -490,6 +738,7 @@
     document.getElementById('statControl').textContent = entries.filter(e => e.game === 'control').length;
     document.getElementById('statJump').textContent    = entries.filter(e => e.game === 'jump').length;
     document.getElementById('tableCount').textContent  = filtered.length + '건';
+    updateDateFilterIcon();
 
     if (filtered.length === 0) {
       tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:#334155">데이터가 없습니다</td></tr>`;

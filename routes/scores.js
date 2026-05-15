@@ -26,6 +26,11 @@ router.put('/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+router.delete('/', (req, res) => {
+  db.prepare('DELETE FROM scores').run();
+  res.json({ ok: true });
+});
+
 router.delete('/:id', (req, res) => {
   db.prepare('DELETE FROM scores WHERE id=?').run(req.params.id);
   res.json({ ok: true });
