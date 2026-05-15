@@ -33,54 +33,48 @@
     }
 
     /* ── Rank Row Overlay (9개) ──
-       SVG 흰색 둥근 사각형 위에 정확히 얹음. */
+       SVG에 흰색 둥근 사각형 + "1위/2위/3위" 라벨이 이미 그려져 있음.
+       이 오버레이는 데이터(이름·기록)만 채움. */
     .rank-row {
       position: absolute;
       width: 23.72%;   /* 455.46 / 1920 */
       height: 7.88%;   /* 85.06 / 1080 */
-      display: flex;
-      align-items: center;
-      padding: 0 1.2%;
     }
-    .rank-num {
-      width: 22%;
-      text-align: center;
-      font-size: clamp(28px, 4.2vh, 64px);
-      font-weight: 900;
-      color: #003685;
-      letter-spacing: -0.02em;
-      flex-shrink: 0;
-    }
+    /* SVG "X위" 라벨 영역(0~24.68%) 다음의 콘텐츠 영역. */
     .rank-content {
-      flex: 1;
-      height: 100%;
+      position: absolute;
+      left: 25%;
+      right: 2%;
+      top: 0;
+      bottom: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 2%;
-      padding: 0 4% 0 5%;
+      gap: 3%;
+      padding: 0 2%;
       min-width: 0;
     }
     .rank-name {
-      font-size: clamp(20px, 2.8vh, 44px);
+      font-size: clamp(14px, 2.0vh, 26px);
       font-weight: 800;
       color: #003685;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       min-width: 0;
+      flex: 0 1 auto;
     }
     .rank-score {
-      font-size: clamp(22px, 3.2vh, 52px);
+      font-size: clamp(15px, 2.2vh, 28px);
       font-weight: 900;
       color: #003685;
       letter-spacing: -0.01em;
       white-space: nowrap;
-      flex-shrink: 0;
+      flex: 0 0 auto;
     }
     .rank-score .unit {
-      font-size: 0.55em;
+      font-size: 0.6em;
       font-weight: 700;
       margin-left: 0.18em;
       opacity: 0.75;
@@ -88,15 +82,12 @@
     .rank-empty {
       width: 100%;
       text-align: center;
-      font-size: clamp(16px, 2.2vh, 32px);
+      font-size: clamp(14px, 1.8vh, 24px);
       font-weight: 700;
       color: #6a8aaa;
-      opacity: 0.55;
+      opacity: 0.5;
       letter-spacing: 0.1em;
     }
-
-    /* 1위는 SVG에 "1" 숫자가 이미 그려져 있어, 오버레이 번호는 숨김 */
-    .rank-row[data-rank="0"] .rank-num { visibility: hidden; }
   </style>
 </head>
 <body>
@@ -144,13 +135,10 @@
       const row = document.querySelector(`.rank-row[data-game="${game}"][data-rank="${i}"]`);
       const entry = list && list[i];
       if (!entry) {
-        row.innerHTML = `
-          <div class="rank-num">${i + 1}</div>
-          <div class="rank-content"><div class="rank-empty">—</div></div>`;
+        row.innerHTML = `<div class="rank-content"><div class="rank-empty">—</div></div>`;
         continue;
       }
       row.innerHTML = `
-        <div class="rank-num">${i + 1}</div>
         <div class="rank-content">
           <div class="rank-name">${entry.name}</div>
           <div class="rank-score">${formatScore(game, entry.score)}</div>
