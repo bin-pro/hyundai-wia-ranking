@@ -154,18 +154,12 @@
   }
 
   function submit() {
-    /* 입력 디지트 → 총 초(REAL)로 변환.
-       6자리로 0-패딩 후 MM/SS/CS로 분리: total = M*60 + S + CS/100
-       ex) "123456" → 12:34:56 → 12*60 + 34 + 0.56 = 754.56초
-           "1432"   → 00:14:32 → 14 + 0.32 = 14.32초 */
+    /* 입력값을 변환 없이 정수(0~999999)로 저장. 단위는 "초".
+       콜론은 표시용일 뿐, 비교는 6자리 정수 그대로 ASC(작을수록 1등). */
     const digits = scoreEl.value.replace(/[^0-9]/g, '');
     const name  = document.getElementById('name').value.trim();
     if (!digits) { showToast('기록을 입력해주세요.'); return; }
-    const padded = digits.padStart(6, '0');
-    const mm = Number(padded.slice(0, 2));
-    const ss = Number(padded.slice(2, 4));
-    const cs = Number(padded.slice(4, 6));
-    const num = mm * 60 + ss + cs / 100;
+    const num = Number(digits);
     if (!(num > 0)) { showToast('올바른 기록을 입력해주세요.'); return; }
     if (!name)  { showToast('이름을 입력해주세요.'); return; }
     if (!selectedSite) { showToast('소속을 선택해주세요.'); return; }

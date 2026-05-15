@@ -586,6 +586,15 @@
     return GAME_ASC[a.game] ? a.score - b.score : b.score - a.score;
   }
 
+  /* 컨트롤은 6자리 정수를 2자리씩 콜론으로 표시 (ex. 123456 → 12:34:56). */
+  function formatScoreText(game, score) {
+    if (game === 'control') {
+      const padded = String(Math.max(0, Math.floor(Number(score)))).padStart(6, '0');
+      return `${padded.slice(0,2)}:${padded.slice(2,4)}:${padded.slice(4,6)}`;
+    }
+    return Number(score).toLocaleString();
+  }
+
   function getFiltered() {
     return entries.filter(e => {
       if (gFilter !== 'all' && e.game !== gFilter) return false;
@@ -676,7 +685,7 @@
     const data = list.map((e, i) => [
       i + 1,
       GAME_META[e.game]?.label || e.game,
-      e.score,
+      formatScoreText(e.game, e.score),
       GAME_META[e.game]?.unit || '',
       e.name,
       e.site,
@@ -747,7 +756,7 @@
       const unit = GAME_META[e.game]?.unit || '';
       return `<tr>
         <td>${rankBadge(rank)}</td>
-        <td><span class="score-val">${e.score.toLocaleString()}</span><span class="score-unit">${unit}</span></td>
+        <td><span class="score-val">${formatScoreText(e.game, e.score)}</span><span class="score-unit">${unit}</span></td>
         <td class="name-cell">${e.name}</td>
         <td>${siteChip(e.site)}</td>
         <td>${gameChip(e.game)}</td>
