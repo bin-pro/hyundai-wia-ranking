@@ -5,3 +5,6 @@ node_modules/
 *.log
 npm-debug.log*
 *.db
+
+# Adobe Illustrator source (>100MB, exceeds GitHub limit)
+*.ai

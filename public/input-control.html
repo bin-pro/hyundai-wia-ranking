@@ -7,123 +7,90 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow: hidden; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #00224b;
+    }
     body {
-      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-      background: linear-gradient(180deg, #b8c8ee 0%, #cdd8f4 28%, #dde3f8 55%, #eeeef8 78%, #f7f7fd 100%);
-      min-height: 100vh;
-    }
-    .bg-crystal {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: contain; object-position: center;
-      pointer-events: none; z-index: 0;
-      mix-blend-mode: multiply; opacity: 1;
-    }
-    .emblem-50 {
-      position: absolute; top: -1.2vh; right: -0.5vw;
-      height: 28vh; width: auto;
-      pointer-events: none; z-index: 10;
-    }
-    .wrapper {
-      position: relative; z-index: 1;
-      height: 100vh;
-      display: flex; flex-direction: column;
-      padding: 1.5vh 4vw 0;
-      max-width: 500px; margin: 0 auto;
-    }
-    .top-header { flex-shrink: 0; margin-bottom: 0.8vh; text-align: center; }
-    .campaign-label {
-      font-size: 1.6vh; font-weight: 600;
-      color: #3a4080; letter-spacing: 0.1em; margin-bottom: 0.5vh;
-    }
-    .beyond-logo { fill: #040000; height: 22vh; width: auto; max-width: 75%; display: block; margin: 0 auto; }
-    .game-section {
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; gap: 2.5vw;
-      margin-bottom: 1.2vh;
-    }
-    .game-text { text-align: center; }
-    .game-title { font-size: 3.2vh; font-weight: 900; color: #5a1080; line-height: 1.1; }
-    .game-sub   { font-size: 1.5vh; font-weight: 600; color: #7a3888; margin-top: 0.3vh; }
-    .game-icon {
-      width: 8vh; height: 8vh; border-radius: 50%;
-      overflow: hidden; flex-shrink: 0;
-    }
-    .game-icon img {
-      display: block;
-      width: calc(1123 / 76 * 8vh); height: auto;
-      margin-left: calc(-201 / 76 * 8vh);
-      margin-top: calc(-438 / 76 * 8vh);
-    }
-    .form-card {
-      flex: 1; min-height: 0;
-      background: rgba(228,210,248,0.78);
-      border-radius: 2.5vh;
-      border: 2px solid rgba(255,255,255,0.95);
-      box-shadow: 0 0.8vh 3vh rgba(80,30,150,0.10);
-      backdrop-filter: blur(18px);
-      padding: 2vh 3.5vw 1.5vh;
-      display: flex; flex-direction: column; gap: 1.5vh;
-      overflow-y: auto;
-    }
-    .field-label {
-      display: flex; align-items: center; gap: 1.5vw;
-      font-size: 1.5vh; font-weight: 700; color: #1a1a40;
-      margin-bottom: 0.8vh;
-    }
-    .step-num {
-      width: 2.5vh; height: 2.5vh; border-radius: 50%;
-      background: #3a1a6a; color: #fff;
-      font-size: 1.3vh; font-weight: 800;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .input-wrap { position: relative; }
-    .field-input {
-      width: 100%; height: 5.5vh;
-      background: #fff; border: 1.5px solid #dddaf0;
-      border-radius: 1.4vh; padding: 0 3vw;
-      font-size: 2.3vh; font-weight: 700; color: #0b1030;
-      font-family: inherit; outline: none; transition: border-color 0.2s;
-    }
-    .field-input:focus { border-color: #8030a8; box-shadow: 0 0 0 3px rgba(128,48,168,0.12); }
-    .field-unit {
-      position: absolute; right: 3vw; top: 50%; transform: translateY(-50%);
-      font-size: 1.7vh; font-weight: 700; color: #8068aa;
-    }
-    .site-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8vh; }
-    .site-btn {
-      height: 5vh;
-      background: #f2f0fb; border: 1.5px solid #d8d0ec;
-      border-radius: 1.2vh;
-      font-size: 1.5vh; font-weight: 700; color: #5a4880;
-      cursor: pointer; transition: all 0.18s; font-family: inherit;
-    }
-    .site-btn:active { transform: scale(0.96); }
-    .site-btn.selected { background: #3a1a6a; border-color: #3a1a6a; color: #fff; }
-    .submit-btn {
-      width: 100%; height: 6.2vh;
-      background: linear-gradient(135deg, #003984, #1060d0);
-      border: none; border-radius: 1.6vh;
-      color: #fff; font-size: 2.1vh; font-weight: 800;
-      letter-spacing: 0.15em; cursor: pointer; font-family: inherit;
-      box-shadow: 0 0.4vh 2vh rgba(0,57,132,0.35);
-      transition: opacity 0.2s, transform 0.15s;
-      display: flex; align-items: center; justify-content: center; gap: 1vw;
-      flex-shrink: 0;
-    }
-    .submit-btn:active { opacity: 0.88; transform: scale(0.98); }
-    .page-footer {
-      flex-shrink: 0;
-      padding: 1vh 3vw;
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
       display: flex; align-items: center; justify-content: center;
+      width: 100vw; height: 100vh;
     }
-    .footer-logo { height: 4.5vh; }
+    .stage {
+      position: relative;
+      width: min(100vw, calc(100vh * 1077.06 / 1920));
+      height: min(100vh, calc(100vw * 1920 / 1077.06));
+      overflow: hidden;
+    }
+    .bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; user-select: none;
+      display: block;
+    }
+    .field {
+      position: absolute;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      color: #07328f;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      padding: 0 5%;
+      caret-color: #07328f;
+    }
+    .field::placeholder { color: transparent; }
+    .field-score {
+      left: 13.27%; top: 45.02%;
+      width: 73.45%; height: 6.71%;
+      font-size: clamp(20px, 4.2vh, 44px);
+      text-align: left;
+    }
+    .field-name {
+      left: 13.27%; top: 57.21%;
+      width: 73.45%; height: 6.71%;
+      font-size: clamp(20px, 4.2vh, 44px);
+      text-align: left;
+    }
+    .site-btn {
+      position: absolute;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 1vh;
+      transition: background 0.18s, box-shadow 0.18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .site-btn:active { transform: scale(0.97); }
+    .site-btn.selected {
+      background: rgba(7, 50, 143, 0.18);
+      box-shadow: 0 0 0 3px #07328f inset;
+    }
+    .site-1 { left: 14.33%; top: 69.40%; width: 21.51%; height: 3.83%; }
+    .site-2 { left: 39.38%; top: 69.40%; width: 21.51%; height: 3.83%; }
+    .site-3 { left: 64.43%; top: 69.40%; width: 21.51%; height: 3.83%; }
+    .site-4 { left: 13.27%; top: 74.21%; width: 23.34%; height: 3.83%; }
+    .site-5 { left: 38.32%; top: 74.21%; width: 23.34%; height: 3.83%; }
+    .site-6 { left: 63.37%; top: 74.21%; width: 23.34%; height: 3.83%; }
+    .submit-btn {
+      position: absolute;
+      left: 13.27%; top: 80.40%;
+      width: 73.45%; height: 4.94%;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 1.6vh;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .submit-btn:active { opacity: 0.85; transform: scale(0.99); }
     .toast {
-      position: fixed; bottom: 10vh; left: 50%; transform: translateX(-50%);
-      background: rgba(10,10,40,0.88); color: #fff;
-      padding: 1.2vh 4vw; border-radius: 30px;
-      font-size: 1.7vh; font-weight: 600;
+      position: fixed; bottom: 6vh; left: 50%; transform: translateX(-50%);
+      background: rgba(10,30,60,0.92); color: #fff;
+      padding: 1.2vh 5vw; border-radius: 30px;
+      font-size: clamp(13px, 1.7vh, 17px); font-weight: 600;
       pointer-events: none; opacity: 0; transition: opacity 0.3s;
       z-index: 100; white-space: nowrap;
     }
@@ -132,99 +99,20 @@
 </head>
 <body>
 
-<img class="bg-crystal"
-     src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/파란 보석 그래픽들_세로형.png"
-     alt="" />
-<div class="wrapper">
+<div class="stage">
+  <img class="bg" src="디자인/컨트롤챌린지.svg" alt="" />
 
-<img class="emblem-50"
-     src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/PNG/엠블럼_크롭.png"
-     alt="" />
-  <div class="top-header">
-    <div class="campaign-label">현대위아 창립 50주년 연간 캠페인</div>
-    <svg class="beyond-logo" viewBox="722 508 362 338" xmlns="http://www.w3.org/2000/svg">
-      <path d="M727.62,664.86v-151.37h24.09c16.18,0,22.44,7.54,22.44,25.93v30.35c0,9.38-3.13,15.08-9.2,16.74,5.89,1.29,11.04,5.7,11.04,16.74v36.05c0,17.84-8.09,25.57-24.28,25.57h-24.09ZM761.1,539.24c0-8.64-2.57-11.59-9.38-11.59h-10.12v53.52h10.3c6.62,0,9.2-2.94,9.2-10.12v-31.82ZM761.65,605.64c0-8.64-1.84-12.14-9.75-12.14h-10.3v57.57h10.12c6.62,0,9.93-3.86,9.93-11.77v-33.66Z"/>
-      <path d="M787.4,664.86v-151.37h40.09v14.16h-26.12v53.15h18.39v13.98h-18.39v56.28h27.04v13.79h-41.01Z"/>
-      <path d="M855.26,664.86v-67.87l-21.34-83.5h14.71c4.78,19.86,12.32,51.5,14.35,62.35,2.02-10.85,9.56-42.3,14.9-62.35h13.61l-22.07,83.5v67.87h-14.16Z"/>
-      <path d="M895.91,537.59c0-17.1,7.91-25.75,23.73-25.75s23.91,8.64,23.91,25.75v103.18c0,17.1-7.91,25.75-23.91,25.75s-23.73-8.64-23.73-25.75v-103.18ZM929.56,537.59c0-7.72-3.31-11.59-9.93-11.59s-9.75,3.86-9.75,11.59v103.18c0,7.91,3.31,11.95,9.75,11.95s9.93-4.05,9.93-11.95v-103.18Z"/>
-      <path d="M993.75,664.86l-26.12-110.54c.18,22.99.18,44.14.18,67.13v43.41h-12.14v-151.37h16.74l23.17,110.91c-.18-20.78-.18-40.46-.18-61.25v-49.66h12.32v151.37h-13.98Z"/>
-      <path d="M1021.16,664.86v-151.37h23.54c16.18,0,23.91,9.75,23.91,25.93v99.69c0,17.1-7.91,25.75-23.91,25.75h-23.54ZM1054.63,539.61c0-7.54-3.31-11.95-9.93-11.95h-9.56v123.41h9.56c6.62,0,9.93-4.05,9.93-11.95v-99.5Z"/>
-      <path d="M786.19,841.44v-47.44c0-23.05.19-44.77.38-67.82l-16.96,115.26h-12.76l-16.77-115.26c.19,23.05.38,44.77.38,67.82v47.44h-13.34v-156.8h19.43l16.58,122.5,16.57-122.5h20v156.8h-13.53Z"/>
-      <path d="M812.29,709.6c0-17.72,8.19-26.67,24.58-26.67s24.77,8.95,24.77,26.67v106.88c0,17.72-8.19,26.67-24.77,26.67s-24.58-8.95-24.58-26.67v-106.88ZM847.15,709.6c0-8-3.43-12-10.29-12s-10.1,4-10.1,12v106.88c0,8.19,3.43,12.38,10.1,12.38s10.29-4.19,10.29-12.38v-106.88Z"/>
-      <path d="M883.92,841.44v-142.13h-17.53v-14.67h49.34v14.67h-17.53v142.13h-14.29Z"/>
-      <path d="M925.26,841.44v-156.8h14.48v156.8h-14.48Z"/>
-      <path d="M953.27,709.6c0-17.72,8.19-26.67,24.58-26.67s24.77,8.95,24.77,26.67v106.88c0,17.72-8.19,26.67-24.77,26.67s-24.58-8.95-24.58-26.67v-106.88ZM988.13,709.6c0-8-3.43-12-10.29-12s-10.1,4-10.1,12v106.88c0,8.19,3.43,12.38,10.1,12.38s10.29-4.19,10.29-12.38v-106.88Z"/>
-      <path d="M1054.62,841.44l-27.05-114.5c.19,23.81.19,45.72.19,69.54v44.96h-12.57v-156.8h17.34l24.01,114.88c-.19-21.53-.19-41.91-.19-63.44v-51.44h12.76v156.8h-14.48Z"/>
-    </svg>
-  </div>
+  <input class="field field-score" id="score" type="text" inputmode="numeric" autocomplete="off" maxlength="5" />
+  <input class="field field-name"  id="name"  type="text" autocomplete="off" />
 
-  <div class="game-section">
-    <div class="game-text">
-      <div class="game-title">컨트롤 챌린지</div>
-      <div class="game-sub">흔들림 없이 나아간 50년</div>
-    </div>
-    <div class="game-icon"><img src="현대위아 창립 50주년 랭킹보드 아이콘_PNG, SVG/SVG/챌린지 아이콘 3종.svg" alt="컨트롤" /></div>
-  </div>
+  <button class="site-btn site-1" data-site="창원1공장" onclick="selectSite(this)" aria-label="창원1공장"></button>
+  <button class="site-btn site-2" data-site="창원2공장" onclick="selectSite(this)" aria-label="창원2공장"></button>
+  <button class="site-btn site-3" data-site="창원3공장" onclick="selectSite(this)" aria-label="창원3공장"></button>
+  <button class="site-btn site-4" data-site="의왕"     onclick="selectSite(this)" aria-label="의왕"></button>
+  <button class="site-btn site-5" data-site="서산"     onclick="selectSite(this)" aria-label="서산"></button>
+  <button class="site-btn site-6" data-site="평택"     onclick="selectSite(this)" aria-label="평택"></button>
 
-  <div class="form-card">
-    <div class="field-group">
-      <div class="field-label"><span class="step-num">①</span> 스코어 입력</div>
-      <div class="input-wrap">
-        <input class="field-input" id="score" type="number" inputmode="decimal"
-               placeholder="" autocomplete="off" step="0.01" />
-        <span class="field-unit">초</span>
-      </div>
-    </div>
-    <div class="field-group">
-      <div class="field-label"><span class="step-num">②</span> 사용자 이름 입력</div>
-      <input class="field-input" id="name" type="text" placeholder="" autocomplete="off" />
-    </div>
-    <div class="field-group">
-      <div class="field-label"><span class="step-num">③</span> 소속 선택</div>
-      <div class="site-grid">
-        <button class="site-btn" data-site="창원1공장" onclick="selectSite(this)">창원1공장</button>
-        <button class="site-btn" data-site="창원2공장" onclick="selectSite(this)">창원2공장</button>
-        <button class="site-btn" data-site="창원3공장" onclick="selectSite(this)">창원3공장</button>
-        <button class="site-btn" data-site="의왕"     onclick="selectSite(this)">의왕</button>
-        <button class="site-btn" data-site="서산"     onclick="selectSite(this)">서산</button>
-        <button class="site-btn" data-site="평택"     onclick="selectSite(this)">평택</button>
-      </div>
-    </div>
-    <button class="submit-btn" onclick="submit()">등록하기 ›</button>
-  </div>
-
-  <div class="page-footer">
-    <svg class="footer-logo" viewBox="130 198 315 85" xmlns="http://www.w3.org/2000/svg" fill="#003984" stroke="none">
-      <polygon points="148.54 217.13 141.4 217.13 141.4 211.16 138.04 211.16 138.04 226.43 141.4 226.43 141.4 220.1 148.54 220.1 148.54 226.43 151.88 226.43 151.88 211.16 148.54 211.16 148.54 217.13"/>
-      <polygon points="161.13 217.84 157.06 211.16 153.07 211.16 159.33 220.79 159.33 226.43 162.92 226.43 162.92 220.79 169.17 211.16 165.19 211.16 161.13 217.84"/>
-      <path d="M180.86,222.57c-.01.17.01.49-.13.68-.16.2-.41.18-.73.19h-6.28v-12.28h-3.35v15.27h10.47c1.01,0,1.93-.15,2.62-.87.71-.72.73-1.77.76-2.38v-12.02h-3.35v11.41Z"/>
-      <path d="M197.64,211.16h-10.47v15.27h3.35v-12.29h6.29c.31,0,.57,0,.73.2.15.19.12.5.12.68v11.41h3.35v-12.02c-.02-.61-.05-1.66-.75-2.38-.69-.72-1.62-.86-2.63-.87"/>
-      <path d="M217.83,214.41c-.01-.61-.03-1.66-.74-2.38-.71-.72-1.63-.86-2.62-.87h-10.48v15.27h10.48c.99,0,1.91-.15,2.62-.87.7-.72.72-1.77.74-2.38v-8.77ZM214.5,222.57c-.02.18.01.49-.13.68-.16.2-.41.18-.73.19h-6.29v-9.3h6.29c.32,0,.57,0,.73.19.14.19.11.5.13.68v7.56Z"/>
-      <path d="M221.37,212.04c-.7.72-.74,1.76-.75,2.37v12.02h3.34v-4.87h7.12v4.87h3.36v-15.27h-10.45c-.99,0-1.92.15-2.62.87ZM224.83,214.14h6.26v4.43h-7.12v-3.56c.02-.18-.02-.49.13-.68.16-.2.41-.19.73-.19"/>
-      <rect x="237.81" y="211.16" width="3.56" height="15.27"/>
-      <path d="M216.02,257.24l-4.95-23.18h-11.96l-4.95,23.18-5.4-23.18h-10.95l8.08,35.27h15.18l4.02-16.56,4.02,16.56h15.18l8.08-35.27h-10.95l-5.4,23.18Z"/>
-      <path d="M237.62,269.33h12.82v-35.3h-12.82v35.3Z"/>
-      <rect x="250.44" y="225.1" width="8.94" height="8.93"/>
-      <path d="M282.95,234.03h-12.92l-16.43,35.3h11.77l11.13-24.3,11.12,24.3h11.78l-16.45-35.3Z"/>
-      <rect x="322" y="204.08" width="2" height="65.25"/>
-      <path d="M353.34,273.31l1.09-3.02,1.08,3.02h-2.17ZM354.04,269.37l-2.25,6.09h.77l.56-1.57h2.59l.56,1.57h.78l-2.24-6.09h-.77Z"/>
-      <polygon points="364.77 274.26 361.53 269.37 360.8 269.37 360.8 275.47 361.53 275.47 361.53 270.58 364.77 275.47 365.51 275.47 365.51 269.37 364.77 269.37 364.77 274.26"/>
-      <polygon points="373.62 274.26 370.37 269.37 369.64 269.37 369.64 275.47 370.37 275.47 370.37 270.58 373.62 275.47 374.35 275.47 374.35 269.37 373.62 269.37 373.62 274.26"/>
-      <rect x="378.48" y="269.37" width=".73" height="6.09"/>
-      <polygon points="385.6 274.69 383.68 269.37 382.89 269.37 385.18 275.47 386.03 275.47 388.32 269.37 387.54 269.37 385.6 274.69"/>
-      <polygon points="392 275.47 395.77 275.47 395.77 274.87 392.73 274.87 392.73 272.69 395.51 272.69 395.51 272.1 392.73 272.1 392.73 269.98 395.77 269.98 395.77 269.37 392 269.37 392 275.47"/>
-      <path d="M400.48,269.99h1.17c.48,0,.83.11,1.04.32.21.21.32.5.32.86s-.11.64-.33.87c-.22.23-.56.34-1.02.34h-1.18v-2.39ZM402.86,272.71c.31-.16.53-.38.68-.65.15-.27.22-.57.22-.9s-.07-.64-.22-.91-.37-.48-.67-.64c-.3-.16-.69-.24-1.17-.24h-1.97v6.09h.73v-2.51h1.25l1.24,2.52h.86l-1.33-2.62c.13-.04.25-.08.36-.14"/>
-      <path d="M416.77,273.31l1.09-3.02,1.08,3.02h-2.17ZM417.48,269.37l-2.25,6.09h.77l.56-1.57h2.59l.56,1.57h.77l-2.24-6.09h-.77Z"/>
-      <polygon points="435.37 269.37 433.85 272.45 432.33 269.37 431.5 269.37 433.48 273.15 433.48 275.47 434.21 275.47 434.21 273.15 436.19 269.37 435.37 269.37"/>
-      <path d="M434.95,216.24c-.27,0-.51-.04-.71-.13-.2-.08-.36-.23-.47-.43-.11-.2-.17-.47-.17-.8v-1.88h-.69v-.81h.69l.11-1.07h.85v1.07h1.1v.81h-1.1v1.88c0,.2.04.34.13.42.09.08.24.12.45.12h.5v.82h-.69Z"/>
-      <path d="M436.58,216.24v-5.79h.96v2.36c.13-.22.32-.4.55-.53.23-.13.49-.2.78-.2.33,0,.61.07.84.2.23.14.41.34.53.6.12.26.18.6.18.99v2.35h-.96v-2.26c0-.35-.07-.61-.22-.8-.15-.18-.37-.27-.67-.27-.19,0-.37.05-.52.14-.16.09-.28.23-.37.4-.09.17-.14.39-.14.64v2.15h-.96Z"/>
-      <path d="M391.3,252.57c1.03,1.46,2.2,2.8,3.48,4l1.45-.43c2.39-.71,4.56-1.6,6.55-2.64-2.16-1.34-4.01-3.08-5.5-5.17-1.48-2.09-2.51-4.42-3.06-6.91-.53-2.4-.59-4.85-.17-7.29s1.28-4.73,2.58-6.82c1.34-2.17,3.08-4.02,5.18-5.5,2.09-1.48,4.42-2.51,6.9-3.06,1.34-.29,2.71-.44,4.07-.44,1.07,0,2.15.09,3.22.27,2.28.39,4.45,1.18,6.43,2.34.3-2.48.44-4.82.49-6.89l.03-1.03c-1.83-.76-3.74-1.31-5.71-1.65-1.48-.25-2.97-.38-4.46-.38-1.89,0-3.79.21-5.64.61-3.45.76-6.67,2.18-9.57,4.24-2.9,2.05-5.31,4.62-7.17,7.62-1.79,2.9-3,6.08-3.57,9.45s-.5,6.77.24,10.1c.76,3.45,2.18,6.67,4.24,9.57"/>
-      <path d="M425.24,214.09c.49.26.97.54,1.45.84,2.78,1.72,5.19,3.92,7.16,6.54-6.2,36.4-36.69,36.88-36.95,36.89h0c24.49-7.3,28.06-32.38,28.34-44.26"/>
-      <path d="M437.22,227.38c.57,1.39,1.01,2.82,1.34,4.3.73,3.33.81,6.73.24,10.1-.1.58-.22,1.15-.35,1.71-14.39,20.35-37.25,16.79-39.23,16.43-.02-.01-.04-.02-.06-.03,27.15-2.82,35.59-23.02,38.07-32.51"/>
-      <path d="M434.14,252.83c-1.68,2.32-3.72,4.34-6.09,6.01-2.9,2.05-6.12,3.48-9.57,4.24-1.86.41-3.75.61-5.64.61-1.48,0-2.98-.13-4.46-.38-2.44-.42-4.78-1.16-6.99-2.22,15.12,2.57,25.72-2.3,32.75-8.26"/>
-      <path d="M376.99,231.27c-1.77-1.77-3.83-3.1-6.13-4.07-2.38-1.01-4.91-1.27-7.51-1.27-.23,0-.45,0-.68.01v-7.1h18.44l5.61-7.86h-32.15v26.52c2.07-2.56,5.24-3.89,8.78-3.89,6.24,0,11.29,5.05,11.29,11.29s-5.06,11.29-11.29,11.29c-4.28,0-8.01-2.39-9.92-5.9l-7.01,3.81c3.38,6.23,9.88,10.09,16.96,10.09,2.6,0,5.13-.51,7.51-1.52,2.3-.97,4.36-2.36,6.13-4.13s3.16-3.83,4.13-6.13c1.01-2.38,1.52-4.91,1.52-7.51s-.51-5.13-1.52-7.51c-.97-2.3-2.36-4.36-4.13-6.13"/>
-    </svg>
-  </div>
+  <button class="submit-btn" onclick="submit()" aria-label="등록하기"></button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -232,29 +120,57 @@
 <script>
   const API_BASE = (location.port && location.port !== '3000') ? 'http://localhost:3000' : '';
   let selectedSite = '';
+  const scoreEl = document.getElementById('score');
+
+  /* 컨트롤 챌린지 — 숫자만 입력받아 XX:XX 형식으로 자동 표시.
+     ex) 1432 → "14:32"  (저장값은 14.32초)
+         143  → "1:43"
+         14   → "14"
+         1    → "1"
+     소수점 2자리(센티초)까지 지원. */
+  scoreEl.addEventListener('input', () => {
+    const digits = scoreEl.value.replace(/[^0-9]/g, '').slice(0, 5);
+    if (digits.length <= 2) {
+      scoreEl.value = digits;
+    } else {
+      scoreEl.value = digits.slice(0, -2) + ':' + digits.slice(-2);
+    }
+  });
+
   function selectSite(el) {
     document.querySelectorAll('.site-btn').forEach(b => b.classList.remove('selected'));
     el.classList.add('selected');
     selectedSite = el.dataset.site;
   }
+
   function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2200);
   }
+
   function submit() {
-    const score = document.getElementById('score').value.trim();
+    /* 입력 형식 "XX:XX" → 14.32초로 변환.
+       2자리 이하: 정수 초로 해석 (예: "14" → 14.00초)
+       3자리 이상: 마지막 2자리는 센티초 (예: "1432" → 14.32초) */
+    const digits = scoreEl.value.replace(/[^0-9]/g, '');
     const name  = document.getElementById('name').value.trim();
-    if (!score) { showToast('스코어를 입력해주세요.'); return; }
+    if (!digits) { showToast('기록을 입력해주세요.'); return; }
+    const num = digits.length <= 2
+      ? Number(digits)
+      : Number(digits.slice(0, -2) + '.' + digits.slice(-2));
+    if (!(num > 0)) { showToast('올바른 기록을 입력해주세요.'); return; }
     if (!name)  { showToast('이름을 입력해주세요.'); return; }
     if (!selectedSite) { showToast('소속을 선택해주세요.'); return; }
+
     fetch(API_BASE + '/api/scores', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ game: 'control', score: Number(score), name, site: selectedSite })
+      body: JSON.stringify({ game: 'control', score: num, name, site: selectedSite })
     }).then(r => r.ok ? showToast('등록되었습니다!') : showToast('오류가 발생했습니다.'))
       .catch(() => showToast('서버 연결 오류'));
-    document.getElementById('score').value = '';
+
+    scoreEl.value = '';
     document.getElementById('name').value  = '';
     document.querySelectorAll('.site-btn').forEach(b => b.classList.remove('selected'));
     selectedSite = '';

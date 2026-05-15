@@ -579,13 +579,26 @@
     return (e.time || '').slice(0, 10); // 'YYYY-MM-DD'
   }
 
+  // 게임별 정렬 방향 (control은 작은 값이 1등)
+  const GAME_ASC = { control: true };
+  function gameCompare(a, b) {
+    if (a.game !== b.game) return a.game.localeCompare(b.game);
+    return GAME_ASC[a.game] ? a.score - b.score : b.score - a.score;
+  }
+
   function getFiltered() {
     return entries.filter(e => {
       if (gFilter !== 'all' && e.game !== gFilter) return false;
       if (sFilter !== 'all' && e.site !== sFilter) return false;
       if (dateFilter.size > 0 && !dateFilter.has(entryDate(e))) return false;
       return true;
-    }).sort((a, b) => b.score - a.score);
+    }).sort((a, b) => {
+      // 게임 필터가 단일 게임이면 그 정렬 방향, 전체면 게임끼리 묶어 정렬
+      if (gFilter !== 'all') {
+        return GAME_ASC[gFilter] ? a.score - b.score : b.score - a.score;
+      }
+      return gameCompare(a, b);
+    });
   }
 
   /* ── Date filter dropdown ──────────────────────── */
@@ -657,11 +670,8 @@
       alert('엑셀 라이브러리 로드 실패. 새로고침 후 다시 시도해주세요.');
       return;
     }
-    // 전체 데이터 — 필터 무시, 게임별 → 점수 내림차순 정렬
-    const all = [...entries].sort((a, b) => {
-      if (a.game !== b.game) return a.game.localeCompare(b.game);
-      return b.score - a.score;
-    });
+    // 전체 데이터 — 필터 무시, 게임별 → 점수 정렬 (control은 오름차순, 나머지 내림차순)
+    const all = [...entries].sort(gameCompare);
     const header = ['순위','게임','스코어','단위','성함','소속','등록시간'];
     const ranksByGame = {};
     const data = all.map(e => {
