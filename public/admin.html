@@ -664,28 +664,24 @@
     }
   });
 
-  /* ── Excel(XLSX) download ─────────────────────── */
+  /* ── Excel(XLSX) download ───────────────────────
+     현재 admin 화면에 보이는 결과(필터/정렬 적용)를 그대로 export. */
   function downloadExcel() {
     if (typeof XLSX === 'undefined') {
       alert('엑셀 라이브러리 로드 실패. 새로고침 후 다시 시도해주세요.');
       return;
     }
-    // 전체 데이터 — 필터 무시, 게임별 → 점수 정렬 (control은 오름차순, 나머지 내림차순)
-    const all = [...entries].sort(gameCompare);
+    const list = getFiltered();
     const header = ['순위','게임','스코어','단위','성함','소속','등록시간'];
-    const ranksByGame = {};
-    const data = all.map(e => {
-      ranksByGame[e.game] = (ranksByGame[e.game] || 0) + 1;
-      return [
-        ranksByGame[e.game],
-        GAME_META[e.game]?.label || e.game,
-        e.score,
-        GAME_META[e.game]?.unit || '',
-        e.name,
-        e.site,
-        e.time || ''
-      ];
-    });
+    const data = list.map((e, i) => [
+      i + 1,
+      GAME_META[e.game]?.label || e.game,
+      e.score,
+      GAME_META[e.game]?.unit || '',
+      e.name,
+      e.site,
+      e.time || ''
+    ]);
     const ws = XLSX.utils.aoa_to_sheet([header, ...data]);
     ws['!cols'] = [
       { wch: 6 }, { wch: 10 }, { wch: 10 }, { wch: 6 },

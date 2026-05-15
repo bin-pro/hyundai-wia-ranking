@@ -102,7 +102,7 @@
 <div class="stage">
   <img class="bg" src="디자인/컨트롤챌린지.svg" alt="" />
 
-  <input class="field field-score" id="score" type="text" inputmode="numeric" autocomplete="off" maxlength="5" />
+  <input class="field field-score" id="score" type="text" inputmode="numeric" autocomplete="off" maxlength="8" />
   <input class="field field-name"  id="name"  type="text" autocomplete="off" />
 
   <button class="site-btn site-1" data-site="창원1공장" onclick="selectSite(this)" aria-label="창원1공장"></button>
@@ -122,19 +122,23 @@
   let selectedSite = '';
   const scoreEl = document.getElementById('score');
 
-  /* 컨트롤 챌린지 — 숫자만 입력받아 XX:XX 형식으로 자동 표시.
-     ex) 1432 → "14:32"  (저장값은 14.32초)
-         143  → "1:43"
-         14   → "14"
-         1    → "1"
-     소수점 2자리(센티초)까지 지원. */
+  /* 컨트롤 챌린지 — 숫자만 입력받아 MM:SS:CS 형식으로 자동 표시.
+     우측부터 2자리씩 끊어 콜론을 삽입.
+     ex) 123456 → "12:34:56" (12분 34.56초 = 754.56초)
+         12345  → "1:23:45"
+         1234   → "12:34"  (=14.32초로 해석되던 이전 4자리 입력과 호환)
+
+         실제로는 마지막 2자리=센티초, 그 다음 2자리=초, 그 다음 2자리=분. */
   scoreEl.addEventListener('input', () => {
-    const digits = scoreEl.value.replace(/[^0-9]/g, '').slice(0, 5);
-    if (digits.length <= 2) {
-      scoreEl.value = digits;
-    } else {
-      scoreEl.value = digits.slice(0, -2) + ':' + digits.slice(-2);
+    const digits = scoreEl.value.replace(/[^0-9]/g, '').slice(0, 6);
+    const groups = [];
+    let s = digits;
+    while (s.length > 2) {
+      groups.unshift(s.slice(-2));
+      s = s.slice(0, -2);
     }
+    if (s.length > 0) groups.unshift(s);
+    scoreEl.value = groups.join(':');
   });
 
   function selectSite(el) {
@@ -150,15 +154,18 @@
   }
 
   function submit() {
-    /* 입력 형식 "XX:XX" → 14.32초로 변환.
-       2자리 이하: 정수 초로 해석 (예: "14" → 14.00초)
-       3자리 이상: 마지막 2자리는 센티초 (예: "1432" → 14.32초) */
+    /* 입력 디지트 → 총 초(REAL)로 변환.
+       6자리로 0-패딩 후 MM/SS/CS로 분리: total = M*60 + S + CS/100
+       ex) "123456" → 12:34:56 → 12*60 + 34 + 0.56 = 754.56초
+           "1432"   → 00:14:32 → 14 + 0.32 = 14.32초 */
     const digits = scoreEl.value.replace(/[^0-9]/g, '');
     const name  = document.getElementById('name').value.trim();
     if (!digits) { showToast('기록을 입력해주세요.'); return; }
-    const num = digits.length <= 2
-      ? Number(digits)
-      : Number(digits.slice(0, -2) + '.' + digits.slice(-2));
+    const padded = digits.padStart(6, '0');
+    const mm = Number(padded.slice(0, 2));
+    const ss = Number(padded.slice(2, 4));
+    const cs = Number(padded.slice(4, 6));
+    const num = mm * 60 + ss + cs / 100;
     if (!(num > 0)) { showToast('올바른 기록을 입력해주세요.'); return; }
     if (!name)  { showToast('이름을 입력해주세요.'); return; }
     if (!selectedSite) { showToast('소속을 선택해주세요.'); return; }
