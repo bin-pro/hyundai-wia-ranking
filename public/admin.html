@@ -221,7 +221,6 @@
     .score-val { font-size: 15px; font-weight: 800; color: #f1f5f9; }
     .score-unit { font-size: 10px; font-weight: 600; color: #475569; margin-left: 2px; }
     .name-cell { font-weight: 600; color: #e2e8f0; }
-    .contact-cell { font-size: 12px; color: #64748b; }
     .chip {
       display: inline-flex; align-items: center;
       border-radius: 20px;
@@ -341,11 +340,9 @@
     @media (max-width: 900px) {
       .stats-row { grid-template-columns: repeat(2,1fr); }
       .main { padding: 16px; }
-      thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
     }
     @media (max-width: 600px) {
       .stats-row { grid-template-columns: repeat(2,1fr); }
-      thead th:nth-child(7), tbody td:nth-child(7) { display: none; }
     }
   </style>
 </head>
@@ -435,7 +432,6 @@
             <th>순위</th>
             <th>스코어</th>
             <th>성함</th>
-            <th>연락처</th>
             <th>소속</th>
             <th>게임</th>
             <th>
@@ -473,10 +469,6 @@
     <div class="form-group">
       <label class="form-label">성함</label>
       <input type="text" class="form-input" id="mName" placeholder="홍길동" />
-    </div>
-    <div class="form-group">
-      <label class="form-label">연락처</label>
-      <input type="text" class="form-input" id="mContact" placeholder="010-0000-0000" />
     </div>
     <div class="form-group">
       <label class="form-label">소속</label>
@@ -555,7 +547,7 @@
     const res = await fetch(API_BASE + '/api/scores');
     entries = (await res.json()).map(e => ({
       id: e.id, score: e.score, name: e.name,
-      contact: e.phone, site: e.site, game: e.game, time: e.created_at
+      site: e.site, game: e.game, time: e.created_at
     }));
     render();
   }
@@ -670,7 +662,7 @@
       if (a.game !== b.game) return a.game.localeCompare(b.game);
       return b.score - a.score;
     });
-    const header = ['순위','게임','스코어','단위','성함','연락처','소속','등록시간'];
+    const header = ['순위','게임','스코어','단위','성함','소속','등록시간'];
     const ranksByGame = {};
     const data = all.map(e => {
       ranksByGame[e.game] = (ranksByGame[e.game] || 0) + 1;
@@ -680,7 +672,6 @@
         e.score,
         GAME_META[e.game]?.unit || '',
         e.name,
-        e.contact || '',
         e.site,
         e.time || ''
       ];
@@ -688,7 +679,7 @@
     const ws = XLSX.utils.aoa_to_sheet([header, ...data]);
     ws['!cols'] = [
       { wch: 6 }, { wch: 10 }, { wch: 10 }, { wch: 6 },
-      { wch: 12 }, { wch: 16 }, { wch: 12 }, { wch: 20 },
+      { wch: 12 }, { wch: 12 }, { wch: 20 },
     ];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, '랭킹');
@@ -741,7 +732,7 @@
     updateDateFilterIcon();
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:#334155">데이터가 없습니다</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#334155">데이터가 없습니다</td></tr>`;
       return;
     }
 
@@ -752,7 +743,6 @@
         <td>${rankBadge(rank)}</td>
         <td><span class="score-val">${e.score.toLocaleString()}</span><span class="score-unit">${unit}</span></td>
         <td class="name-cell">${e.name}</td>
-        <td class="contact-cell">${e.contact || '-'}</td>
         <td>${siteChip(e.site)}</td>
         <td>${gameChip(e.game)}</td>
         <td class="time-cell">${e.time}</td>
@@ -772,7 +762,6 @@
     document.getElementById('modalTitle').textContent = '항목 추가';
     document.getElementById('mScore').value = '';
     document.getElementById('mName').value = '';
-    document.getElementById('mContact').value = '';
     document.getElementById('mSite').value = '';
     document.getElementById('mGame').value = '';
     document.getElementById('modalOverlay').classList.add('show');
@@ -785,7 +774,6 @@
     document.getElementById('modalTitle').textContent = '항목 수정';
     document.getElementById('mScore').value = e.score;
     document.getElementById('mName').value = e.name;
-    document.getElementById('mContact').value = e.contact;
     document.getElementById('mSite').value = e.site;
     document.getElementById('mGame').value = e.game;
     document.getElementById('modalOverlay').classList.add('show');
@@ -798,7 +786,6 @@
   async function saveEntry() {
     const score   = Number(document.getElementById('mScore').value);
     const name    = document.getElementById('mName').value.trim();
-    const contact = document.getElementById('mContact').value.trim();
     const site    = document.getElementById('mSite').value;
     const game    = document.getElementById('mGame').value;
 
@@ -815,13 +802,13 @@
       await fetch(API_BASE + '/api/scores', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ score, name, phone: contact, site, game })
+        body: JSON.stringify({ score, name, site, game })
       });
     } else {
       await fetch(`${API_BASE}/api/scores/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ score, name, phone: contact, site, game })
+        body: JSON.stringify({ score, name, site, game })
       });
     }
     closeModal();
