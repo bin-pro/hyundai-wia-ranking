@@ -13,4 +13,10 @@ db.exec(`
   )
 `);
 
+db.exec(`
+  UPDATE scores SET site='의왕연구소' WHERE site='의왕';
+  UPDATE scores SET site='서산공장'   WHERE site='서산';
+  UPDATE scores SET site='평택공장'   WHERE site='평택';
+`);
+
 module.exports = db;
