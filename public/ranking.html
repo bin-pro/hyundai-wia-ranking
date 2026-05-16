@@ -54,27 +54,27 @@
       padding: 0 2%;
       min-width: 0;
     }
-    .rank-info {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 0.4vh;
-      min-width: 0;
-      flex: 0 1 auto;
-      overflow: hidden;
-    }
+    /* SVG에 mock 칩(9개)이 그려져 있음 — HTML 칩을 그 좌표에 정확히 얹어 덮음.
+       SVG 칩 좌표: 행 내 left=26.86% top=23.44% width=14.25% height=22.34%. */
     .rank-site {
-      font-size: clamp(10px, 1.25vh, 15px);
-      font-weight: 800;
-      line-height: 1;
-      padding: 0.35vh 0.8vh;
+      position: absolute;
+      left: 26.86%;
+      top: 23.44%;
+      min-width: 14.25%;
+      height: 22.34%;
+      padding: 0 0.7vh;
       border-radius: 999px;
-      letter-spacing: -0.02em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(8px, 1.0vh, 13px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.04em;
       white-space: nowrap;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1;
+      box-sizing: border-box;
+      z-index: 2;
     }
     .rank-name {
       font-size: clamp(14px, 2.0vh, 26px);
@@ -85,8 +85,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       min-width: 0;
-      max-width: 100%;
-      line-height: 1;
+      flex: 0 1 auto;
     }
     .rank-score {
       font-size: clamp(15px, 2.2vh, 28px);
@@ -196,7 +195,7 @@
   function siteChip(site) {
     if (!site) return '';
     const [r,g,b] = SITE_COLORS[site] || [120,150,180];
-    return `<span class="rank-site" style="background:rgba(${r},${g},${b},0.14);color:rgb(${r},${g},${b})">${site}</span>`;
+    return `<span class="rank-site" style="background:rgb(${r},${g},${b})">${site}</span>`;
   }
 
   /* 컨트롤 점수(정수)를 6자리로 패딩 후 2자리씩 콜론으로 구분.
@@ -231,11 +230,9 @@
         continue;
       }
       row.innerHTML = `
+        ${siteChip(entry.site)}
         <div class="rank-content">
-          <div class="rank-info">
-            ${siteChip(entry.site)}
-            <div class="rank-name">${entry.name}</div>
-          </div>
+          <div class="rank-name">${entry.name}</div>
           <div class="rank-score">${formatScore(game, entry.score)}</div>
         </div>`;
     }
