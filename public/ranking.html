@@ -56,7 +56,7 @@
     }
     /* SVG에 mock 칩(9개)이 그려져 있음 — HTML 칩을 그 좌표에 정확히 얹어 덮음.
        SVG 칩 좌표: 행 내 left=26.86% top=23.44% width=14.25% height=22.34%.
-       색은 SVG mock과 동일한 진한 네이비 단색 통일. */
+       색은 site별로 다름 — inline style로 지정. */
     .rank-site {
       position: absolute;
       left: 26.86%;
@@ -70,7 +70,6 @@
       justify-content: center;
       font-size: clamp(8px, 1.0vh, 13px);
       font-weight: 800;
-      background: #003685;
       color: #fff;
       letter-spacing: -0.04em;
       white-space: nowrap;
@@ -186,10 +185,18 @@
 <script>
   const API_BASE = (location.port && location.port !== '3000') ? 'http://localhost:3000' : '';
 
-  /* 칩 색은 CSS에서 단색(#003685)으로 통일 — SVG mock 그라디언트와 일치시킴. */
+  const SITE_COLORS = {
+    '의왕 연구소':[59,130,246],
+    '평택 공장': [16,185,129],
+    '서산 공장': [245,158,11],
+    '창원 1공장':[139,92,246],
+    '창원 2공장':[239,68,68],
+    '창원 3공장':[6,182,212],
+  };
   function siteChip(site) {
     if (!site) return '';
-    return `<span class="rank-site">${site}</span>`;
+    const [r,g,b] = SITE_COLORS[site] || [120,150,180];
+    return `<span class="rank-site" style="background:rgb(${r},${g},${b})">${site}</span>`;
   }
 
   /* 컨트롤 점수(정수)를 6자리로 패딩 후 2자리씩 콜론으로 구분.
