@@ -227,7 +227,9 @@
       const row = document.querySelector(`.rank-row[data-game="${game}"][data-rank="${i}"]`);
       const entry = list && list[i];
       if (!entry) {
-        row.innerHTML = `<div class="rank-content"><div class="rank-empty">—</div></div>`;
+        row.innerHTML = `
+          <span class="rank-site" style="background:#fff"></span>
+          <div class="rank-content"><div class="rank-empty">—</div></div>`;
         continue;
       }
       row.innerHTML = `
