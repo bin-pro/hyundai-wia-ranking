@@ -547,7 +547,7 @@
     const res = await fetch(API_BASE + '/api/scores');
     entries = (await res.json()).map(e => ({
       id: e.id, score: e.score, name: e.name,
-      site: e.site, game: e.game, time: e.created_at
+      site: e.site, game: e.game, time: new Date(new Date(e.created_at + 'Z').getTime() + 9*3600000).toISOString().slice(0,19).replace('T',' ')
     }));
     render();
   }
